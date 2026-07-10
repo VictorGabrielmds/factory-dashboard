@@ -2,8 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/factory-dashboard/assets/logof-blue-0SJt4lEL.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/factory-dashboard/icons/icon.svg" />
+    <link rel="manifest" href="/factory-dashboard/manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- PWA / "app instalado" — o script abaixo já ajusta a cor pro tema certo -->
+    <meta id="theme-color-meta" name="theme-color" content="#F4F5F9" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Salgados" />
+    <link rel="apple-touch-icon" href="/factory-dashboard/icons/icon.svg" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
@@ -16,11 +27,13 @@
             ? salvo
             : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
           document.documentElement.setAttribute("data-theme", tema);
+          var meta = document.getElementById("theme-color-meta");
+          if (meta) meta.setAttribute("content", tema === "dark" ? "#0F1017" : "#F4F5F9");
         } catch (e) {}
       })();
     </script>
-    <script type="module" crossorigin src="/factory-dashboard/assets/index-ftkswBxZ.js"></script>
-    <link rel="stylesheet" crossorigin href="/factory-dashboard/assets/index-Bll3ydwu.css">
+    <script type="module" crossorigin src="/factory-dashboard/assets/index-BgVKbO8w.js"></script>
+    <link rel="stylesheet" crossorigin href="/factory-dashboard/assets/index-DvThWOcC.css">
   </head>
   <body>
     <div id="root"></div>
