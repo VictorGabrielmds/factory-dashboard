@@ -8,8 +8,19 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <title>Dashboard - Fabrica dos Salgados</title>
-    <script type="module" crossorigin src="/factory-dashboard/assets/index-SFsHPeww.js"></script>
-    <link rel="stylesheet" crossorigin href="/factory-dashboard/assets/index-BE9rGwGH.css">
+    <script>
+      (function () {
+        try {
+          var salvo = localStorage.getItem("fs-theme");
+          var tema = salvo === "dark" || salvo === "light"
+            ? salvo
+            : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          document.documentElement.setAttribute("data-theme", tema);
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/factory-dashboard/assets/index-C3YDTvhG.js"></script>
+    <link rel="stylesheet" crossorigin href="/factory-dashboard/assets/index-CMeMpcz6.css">
   </head>
   <body>
     <div id="root"></div>
