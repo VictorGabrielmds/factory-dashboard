@@ -23,8 +23,9 @@ messaging.onBackgroundMessage((payload) => {
   const notificationTitle = payload.data?.title || "Nova Mensagem";
   const notificationOptions = {
     body: payload.data?.body || "Você tem uma nova mensagem",
-    icon: '/favicon.ico', 
-    badge: '/favicon.ico',
+    // Logo de verdade em vez do favicon genérico — mesmo ícone do manifest.json.
+    icon: '/factory-dashboard/icons/icon.svg',
+    badge: '/factory-dashboard/icons/icon.svg',
     vibrate: [200, 100, 200],
     data: { chatId: payload.data?.chatId } // Guardamos o ID do cliente aqui silenciosamente
   };
