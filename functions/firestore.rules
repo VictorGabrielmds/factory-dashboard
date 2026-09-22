@@ -1,0 +1,51 @@
+rules_version = '2';
+
+// ============================================================================
+// REGRAS DO FIRESTORE
+// O Admin SDK (Cloud Functions) IGNORA estas regras — elas valem apenas para
+// o painel/web/apps que usam o SDK cliente.
+//
+// Modelo: o painel precisa estar logado no Firebase Auth (crie um usuário
+// para a loja no console → Authentication → Add user).
+// ============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function logado() {
+      return request.auth != null;
+    }
+
+    // Painel: leitura em tempo real das conversas e mensagens
+    match /conversas/{telefone} {
+      allow read: if logado();
+      allow write: if false; // escrita só via Functions
+
+      match /mensagens/{msgId} {
+        allow read: if logado();
+        allow write: if false;
+      }
+    }
+
+    // Outbox: o painel CRIA itens (envio offline-first); nunca lê de terceiros
+    match /outbox/{itemId} {
+      allow create: if logado()
+        && request.resource.data.telefone is string
+        && request.resource.data.telefone.matches('^55[0-9]{10,11}$');
+      allow read: if logado();   // para exibir estado enviado/erro na UI
+      allow update, delete: if false;
+    }
+
+    match /pedidos/{id}       { allow read: if logado(); allow write: if false; }
+    match /pendencias/{id}    { allow read: if logado(); allow write: if false; }
+    match /configuracoes/{id} { allow read: if logado(); allow write: if false; }
+
+    // Coleções internas do backend: ninguém de fora toca
+    match /eventos_meta/{id}      { allow read, write: if false; }
+    match /eventos_asaas/{id}     { allow read, write: if false; }
+    match /_idempotency/{id}      { allow read, write: if false; }
+    match /pagamentos_asaas/{id}  { allow read, write: if false; }
+
+    match /{document=**} { allow read, write: if false; }
+  }
+}

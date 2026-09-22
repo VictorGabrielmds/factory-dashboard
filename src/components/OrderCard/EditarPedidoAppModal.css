@@ -1,0 +1,253 @@
+.epa-carregando {
+  padding: 2rem 0;
+  text-align: center;
+  color: var(--sys-color-text-muted);
+}
+
+.epa-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.epa-section h3 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--sys-color-text-muted);
+  margin: 0 0 0.5rem;
+}
+
+.epa-itens-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.epa-item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--sys-color-line);
+  border-radius: 8px;
+}
+
+.epa-item-nome {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.85rem;
+  color: var(--sys-color-text-main);
+}
+
+.epa-item-qtd {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--sys-color-primary-soft);
+  border-radius: 99px;
+  padding: 2px 6px;
+}
+
+.epa-item-qtd button {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: none;
+  background: var(--sys-color-surface);
+  color: var(--sys-color-primary);
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.epa-item-qtd span {
+  min-width: 16px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.epa-item-remover {
+  border: none;
+  background: none;
+  color: var(--sys-color-danger);
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.epa-vazio {
+  font-size: 0.82rem;
+  color: var(--sys-color-text-faint);
+}
+
+.epa-busca {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--sys-color-line);
+  margin-bottom: 0.5rem;
+  box-sizing: border-box;
+}
+
+.epa-produtos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  max-height: 160px;
+  overflow-y: auto;
+}
+
+.epa-produto-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid var(--sys-color-line);
+  border-radius: 8px;
+  background: var(--sys-color-surface);
+  cursor: pointer;
+  font-size: 0.82rem;
+  text-align: left;
+}
+
+.epa-produto-item:hover {
+  background: var(--sys-color-primary-soft);
+}
+
+.epa-produto-preco {
+  font-weight: 700;
+  color: var(--sys-color-text-muted);
+}
+
+.epa-tipo-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.epa-tipo-toggle button {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1.5px solid var(--sys-color-line);
+  background: var(--sys-color-surface);
+  font-weight: 700;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.epa-tipo-toggle button.ativo {
+  border-color: var(--sys-color-primary);
+  background: var(--sys-color-primary-soft);
+  color: var(--sys-color-primary-hover);
+}
+
+.epa-endereco {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.epa-endereco-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0.5rem;
+}
+
+.epa-endereco input {
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--sys-color-line);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.epa-bairro-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-end;
+}
+
+.epa-bairro-row > input {
+  flex: 1;
+}
+
+.epa-taxa-field {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.68rem;
+  color: var(--sys-color-text-muted);
+}
+
+.epa-taxa-field input {
+  width: 90px;
+  padding: 0.5rem 0.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--sys-color-line);
+}
+
+.epa-select,
+.epa-textarea {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--sys-color-line);
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 0.85rem;
+  color: var(--sys-color-text-main);
+  background: var(--sys-color-surface);
+}
+
+.epa-select {
+  margin-bottom: 0.5rem;
+}
+
+.epa-textarea {
+  resize: vertical;
+}
+
+.epa-resumo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--sys-color-line);
+  font-size: 0.85rem;
+}
+
+.epa-acoes {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+}
+
+.epa-btn-cancelar,
+.epa-btn-salvar {
+  padding: 0.6rem 1.25rem;
+  border-radius: 9px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.epa-btn-cancelar {
+  border: 1.5px solid var(--sys-color-line-strong);
+  background: none;
+  color: var(--sys-color-text-main);
+}
+
+.epa-btn-salvar {
+  border: none;
+  background: var(--sys-color-primary);
+  color: #fff;
+}
+
+.epa-btn-salvar:disabled,
+.epa-btn-cancelar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,0 +1,28 @@
+.elastic-container {
+  position: fixed;
+  top: 0;
+  right: 15%;
+  width: 100px;
+  height: 0px;
+  z-index: 999999999;
+  display: flex;
+  justify-content: center;
+  pointer-events: none; /* Container invisível não bloqueia cliques */
+}
+
+/* Garante que o SVG/Bola recebam cliques */
+.elastic-container svg {
+    pointer-events: auto;
+}
+
+
+.ball-group circle:hover {
+    filter: brightness(1.1);
+}
+
+@media (max-width: 666px) {
+  .elastic-container {
+  left: 5%;
+  width: 80px;
+}
+}

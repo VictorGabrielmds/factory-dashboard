@@ -1,0 +1,973 @@
+/* ═══════════════════════════════════════════════════════════════
+   Global / App.css — o design system da Fábrica
+   A paleta da "comanda" (antes duplicada por módulo como --oc-*)
+   agora é a fundação: tinta em três níveis, picote como token,
+   números tabulares como utilidade. Todos os nomes antigos de
+   token e classe foram MANTIDOS — só os valores foram refinados
+   e novos tokens foram adicionados.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── 1. TOKENS DE DESIGN ───────────────────────────────────── */
+:root {
+  /* Cores principais — preto/grafite refinado no lugar do índigo
+     corporativo: o acento É a própria tinta do texto (--sys-color-text-main),
+     não uma cor à parte. Uso monocromático, mais discreto e "de elite". */
+  --sys-color-primary: #1C1D26;
+  --sys-color-primary-hover: #34353F;
+  --sys-color-primary-soft: #EFEFF2;   /* fundo de estado ativo, neutro */
+  --sys-color-on-primary: #FFFFFF;     /* cor do texto/ícone sobre --sys-color-primary */
+  --sys-color-success: #06A77D;
+  --sys-color-success-ink: #04815F;    /* NOVO: hover do verde */
+  --sys-color-success-soft: #EDF9F5;   /* NOVO */
+  --sys-color-danger: #D81E5C;         /* magenta da casa (era #E11D48) */
+  --sys-color-warning: #B45309;        /* âmbar de texto (era #D97706) */
+  --sys-color-warning-dot: #F59E0B;    /* NOVO: pontos/ícones de alerta */
+  --sys-color-warning-soft: #FDF4E3;   /* NOVO */
+
+  /* Acento — o índigo da casa, agora reservado (regra 60-30-10): nunca em
+     preenchimento de botão ou fundo grande, só em focus rings, estados
+     selecionados/ativos, bolhas de mensagem enviada e destaques pontuais
+     ("sugestão", badge "info"). O preto/grafite acima é que carrega o
+     grosso do peso visual (os 90% neutros); isto aqui é o tempero. */
+  --sys-color-accent: #32378E;
+  --sys-color-accent-hover: #262A6E;
+  --sys-color-accent-soft: #F0F1FA;
+  --sys-color-accent-rgb: 50, 55, 142;
+
+  /* Fundos e superfícies */
+  --sys-color-background: #F4F5F9;     /* canvas com leve tom de lavanda */
+  --sys-color-surface: #FFFFFF;
+  --sys-color-input-bg: #F7F8FB;
+
+  /* Tinta em três níveis (antes só main/muted) */
+  --sys-color-text-main: #1C1D26;
+  --sys-color-text-muted: #5A5C6E;     /* escureceu: melhor contraste */
+  --sys-color-text-faint: #9A9CB0;     /* NOVO: rótulos, ids, placeholders */
+
+  /* Linhas */
+  --sys-color-line: #E8E9F1;           /* NOVO: hairlines */
+  --sys-color-line-strong: #C9CCE8;    /* NOVO: borda de destaque (btn-secondary etc.) */
+  --sys-color-line-hover: #DDDFF0;     /* NOVO: borda em hover de card */
+  --sys-color-perf: #D5D7E4;           /* NOVO: a linha de picote */
+
+  /* Fundos auxiliares */
+  --sys-color-hover-bg: #F2F3F8;       /* NOVO: hover de botão de ícone */
+  --sys-color-surface-subtle: #FBFBFE; /* NOVO: fundo levemente destacado da surface */
+  --sys-color-danger-soft: #FCE8EF;    /* NOVO: fundo suave de estado de erro/alerta */
+
+  /* Sombras (Soft UI, duas camadas) */
+  --shadow-soft: 0 1px 2px rgba(28, 29, 38, 0.04), 0 4px 14px rgba(28, 29, 38, 0.05);
+  --shadow-hover: 0 2px 4px rgba(28, 29, 38, 0.05), 0 10px 26px rgba(28, 29, 38, 0.1);
+  --shadow-primary: 0 3px 12px rgba(28, 29, 38, 0.28);
+
+  /* Arredondamentos — pill reservado a badges/segmented controls;
+     botões de ação usam --radius-input (ver .btn-primary/.btn-confirm). */
+  --radius-pill: 30px;
+  --radius-card: 16px;                 /* era 20 — alinhado aos cards novos */
+  --radius-input: 12px;
+
+  /* Safe-area (notch/home indicator) — 0px em quem não tem, o valor real
+     do sistema em quem tem. Usar var(--safe-*) em vez de env() direto
+     deixa a intenção clara e centraliza o fallback num só lugar. */
+  --safe-top:    env(safe-area-inset-top, 0px);
+  --safe-right:  env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left:   env(safe-area-inset-left, 0px);
+}
+
+/* ─── 1b. MODO ESCURO ───────────────────────────────────────── */
+/* Mesmos tokens, valores redefinidos — o resto do CSS do app não
+   precisa saber que o tema mudou, só usar var(--sys-color-*). */
+:root[data-theme="dark"] {
+  --sys-color-primary: #EDEDF4;
+  --sys-color-primary-hover: #D5D6E0;
+  --sys-color-primary-soft: #26272F;
+  --sys-color-on-primary: #14151C;
+  --sys-color-success: #2FD9AC;
+  --sys-color-success-ink: #6BEBC9;
+  --sys-color-success-soft: #123832;
+  --sys-color-danger: #FF6B9A;
+  --sys-color-warning: #F2A65A;
+  --sys-color-warning-dot: #FBBF53;
+  --sys-color-warning-soft: #3A2C16;
+
+  --sys-color-accent: #7A7FE8;
+  --sys-color-accent-hover: #9297EE;
+  --sys-color-accent-soft: #262A45;
+  --sys-color-accent-rgb: 122, 127, 232;
+
+  --sys-color-background: #0F1017;
+  --sys-color-surface: #1A1B26;
+  --sys-color-input-bg: #21222F;
+
+  --sys-color-text-main: #EDEDF4;
+  --sys-color-text-muted: #ABADC2;
+  --sys-color-text-faint: #71738C;
+
+  --sys-color-line: #2A2C3C;
+  --sys-color-line-strong: #3B3E57;
+  --sys-color-line-hover: #454869;
+  --sys-color-perf: #34364A;
+
+  --sys-color-hover-bg: #23243A;
+  --sys-color-surface-subtle: #15161F;
+  --sys-color-danger-soft: #3A1626;
+
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.25), 0 4px 14px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.3), 0 10px 26px rgba(0, 0, 0, 0.4);
+  --shadow-primary: 0 3px 14px rgba(0, 0, 0, 0.45);
+
+  color-scheme: dark;
+}
+
+/* ─── 2. RESET GERAL ────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+body {
+  background-color: var(--sys-color-background);
+  font-family: 'Inter Variable', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--sys-color-text-main);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Seleção de texto na cor da casa */
+::selection {
+  background: var(--sys-color-primary-soft);
+  color: var(--sys-color-primary);
+}
+
+/* ─── 2b. MOBILE / SENSAÇÃO DE APP NATIVO ───────────────────── */
+html {
+  /* Mata o "elastic bounce" da página inteira — cada área que precisa
+     rolar (lista, chat, modal) declara seu próprio overscroll-behavior:
+     contain, então o rebote fica contido ali, não vaza pro body. */
+  overscroll-behavior-y: none;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  overscroll-behavior-y: none;
+}
+
+/* Sem o círculo cinza/azul de toque do Android/Chrome em cima de botões
+   e links — o próprio :active/:hover de cada componente já dá o feedback. */
+button,
+a,
+[role="button"],
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Chrome de interface (botões, ícones, abas, itens de lista clicáveis)
+   não deve entrar em modo "selecionar texto" com toque longo, nem abrir
+   o menu de callout do iOS — texto de verdade (mensagens, valores,
+   endereços) continua selecionável normalmente, isso não é global. */
+button,
+a,
+[role="button"],
+.icon-button-filled,
+.icon-button-outline,
+.buttons-list,
+.chat-item,
+.md-table thead {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Toque de verdade, sem o delay de 300ms esperando um possível
+   double-tap-to-zoom (o viewport já trava o zoom, isso reforça). */
+button,
+a,
+[role="button"],
+input[type="checkbox"],
+input[type="radio"] {
+  touch-action: manipulation;
+}
+
+/* iOS abre teclado e dá zoom automático em inputs com font-size < 16px.
+   0.95rem (~15.2px) é menor que isso — sobe pra 16px só na faixa mobile,
+   sem mudar a escala visual do resto do design em desktop. */
+@media (max-width: 666px) {
+  input[type="text"],
+  input[type="search"],
+  input[type="number"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="date"],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* ─── 3. SCROLLBARS ─────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(28, 29, 38, 0.18) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(28, 29, 38, 0.16);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(28, 29, 38, 0.3);
+}
+
+:root[data-theme="dark"] * {
+  scrollbar-color: rgba(237, 237, 244, 0.18) transparent;
+}
+
+:root[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(237, 237, 244, 0.16);
+}
+
+:root[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(237, 237, 244, 0.28);
+}
+
+/* ─── 4. FORMULÁRIOS & INPUTS GLOBAIS ───────────────────────── */
+input[type="text"],
+input[type="search"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+  width: 100%;
+  background-color: var(--sys-color-input-bg);
+  border: 1.5px solid transparent;
+  color: var(--sys-color-text-main);
+  padding: 12px 16px;
+  border-radius: var(--radius-input);
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: 'Inter Variable', sans-serif;
+  outline: none;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  box-sizing: border-box;
+}
+
+/* O "halo" de foco — um dos poucos lugares (regra 60-30-10) onde o
+   acento índigo aparece: separa "isto está em foco" de "isto é uma ação"
+   (preto), convenção que todo o resto do app já seguia antes. */
+input:focus,
+select:focus,
+textarea:focus {
+  background-color: var(--sys-color-surface);
+  border-color: var(--sys-color-accent);
+  box-shadow: 0 0 0 4px rgba(var(--sys-color-accent-rgb), 0.09);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--sys-color-text-faint);
+  font-weight: 400;
+}
+
+/* ─── 5. BOTÕES GLOBAIS ─────────────────────────────────────── */
+button {
+  font-family: 'Inter Variable', sans-serif;
+  border: none;
+  margin: 0;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease,
+              box-shadow 0.18s ease, transform 0.12s ease,
+              border-color 0.18s ease;
+}
+
+/* Foco de teclado visível em todo o app — mesmo anel dos módulos */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--sys-color-primary);
+  outline-offset: 2px;
+}
+
+/* Classe base para botões com texto */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: var(--radius-input);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+/* Variantes */
+/* Estilo base e ativado usando variáveis GLOBAIS do :root */
+.btn-primary {
+    background-color: var(--sys-color-primary);
+    color: var(--sys-color-on-primary, #FFFFFF) !important;
+    font-family: var(--md-font-family, 'Inter Variable', sans-serif);
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    padding: 11px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    box-shadow: var(--sys-shadow-sm);
+    transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
+    flex: 1; /* Para esticar no layout de botões */
+}
+
+/* Efeito Hover (apenas quando não está desativado) */
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--sys-color-primary-hover);
+    box-shadow: var(--sys-shadow-md);
+    transform: translateY(-1px);
+}
+
+/* Estado Desativado (Sem motoboy selecionado) */
+.btn-primary:disabled {
+    background-color: var(--sys-color-line);
+    color: var(--sys-color-text-faint) !important;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--sys-color-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-primary);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--sys-color-primary);
+  border: 1.5px solid var(--sys-color-line-strong);
+}
+
+.btn-secondary:hover {
+  border-color: var(--sys-color-primary);
+  background-color: var(--sys-color-primary-soft);
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background-color: var(--sys-color-success);
+  color: #ffffff;
+  box-shadow: 0 1px 2px rgba(6, 167, 125, 0.3);
+}
+
+.btn-success:hover {
+  background-color: var(--sys-color-success-ink);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(6, 167, 125, 0.28);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--sys-color-primary);
+  border: 1.5px solid var(--sys-color-primary);
+}
+
+.btn-outline:hover {
+  background-color: var(--sys-color-primary-soft);
+}
+
+/* ─── 6. BOTÕES DE ÍCONE ────────────────────────────────────── */
+.icon-button-filled {
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: var(--sys-color-text-faint);
+  border-radius: 50%;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.icon-button-filled:hover {
+  color: var(--sys-color-text-main);
+  background-color: var(--sys-color-hover-bg);
+}
+
+.icon-button-filled.active {
+  color: var(--sys-color-on-primary, #fff);
+  background-color: var(--sys-color-primary);
+  box-shadow: var(--shadow-primary);
+}
+
+.icon-button-outline {
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  color: var(--sys-color-text-faint);
+  border: 1.5px solid var(--sys-color-line);
+  border-radius: 50%;
+}
+
+.icon-button-outline:hover {
+  color: var(--sys-color-primary);
+  border-color: var(--sys-color-line-strong);
+  background-color: var(--sys-color-primary-soft);
+}
+
+/* ─── 7. CARTÕES & UTILIDADES ───────────────────────────────── */
+.card {
+  border-radius: var(--radius-card);
+  padding: 24px;
+  background: var(--sys-color-surface);
+  border: 1px solid var(--sys-color-line);
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow 0.18s ease, transform 0.15s ease, border-color 0.18s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--sys-color-line-hover);
+  transform: translateY(-1px);
+}
+
+/* Acabamento compartilhado entre todos os módulos operacionais */
+.dashboard-view {
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+}
+
+.dashboard-view :is(
+  .table-container,
+  .lists > section,
+  .kanban-column,
+  .analytics-card,
+  .clientes-kpi-card,
+  .clientes-secao,
+  .frituras-calendar-card,
+  .resumo-card,
+  .fritura-card,
+  .produto-card,
+  .produtos-ordem-categorias,
+  .order-card,
+  .audit-card
+) {
+  border-color: var(--sys-color-line);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.025), 0 8px 24px -22px rgba(15, 23, 42, 0.28);
+}
+
+.dashboard-view :is(
+  .analytics-card,
+  .clientes-kpi-card,
+  .fritura-card,
+  .produto-card,
+  .audit-card
+) {
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+@media (hover: hover) {
+  .dashboard-view :is(
+    .analytics-card,
+    .clientes-kpi-card,
+    .fritura-card,
+    .produto-card,
+    .audit-card
+  ):hover {
+    border-color: var(--sys-color-line-hover);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+}
+
+.dashboard-view :is(
+  .order-dashboard-menu,
+  .motoboy-header,
+  .cozinha-toolbar,
+  .caixa-header-actions,
+  .frituras-header,
+  .clientes-toolbar,
+  .pdv-abas-wrap
+) {
+  border-color: var(--sys-color-line);
+}
+
+.dashboard-view :is(
+  .data-button-list,
+  .cozinha-filtros,
+  .clientes-periodos,
+  .pdv-abas
+) button {
+  min-height: 36px;
+}
+
+.dashboard-view :is(
+  .search-box input,
+  input[type="search"],
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea
+) {
+  border-color: var(--sys-color-line);
+}
+
+.dashboard-view :is(
+  .search-box input,
+  input[type="search"],
+  input[type="text"],
+  input[type="number"],
+  select
+) {
+  min-height: 40px;
+}
+
+.dashboard-view :is(
+  .btn-primary,
+  .btn-secondary,
+  .btn-outline,
+  .btn-success
+) {
+  min-height: 40px;
+  border-radius: 10px;
+}
+
+.dashboard-view .md-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.dashboard-view .md-table thead th {
+  color: var(--sys-color-text-muted);
+  background: var(--sys-color-surface-subtle);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.dashboard-view .md-table tbody tr {
+  transition: background-color 0.14s ease;
+}
+
+.dashboard-view .md-table tbody tr:hover {
+  background: var(--sys-color-hover-bg);
+}
+
+.dashboard-view :is(
+  .cozinha-vazio,
+  .frituras-empty,
+  .clientes-vazio,
+  .produtos-empty,
+  .chat-empty-state
+) {
+  border-radius: var(--radius-card);
+  color: var(--sys-color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-view *,
+  .dashboard-view *::before,
+  .dashboard-view *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Linguagem visual unificada dos módulos */
+.dashboard-factory .dashboard-view {
+  padding: 2px 4px 8px 2px;
+}
+
+.dashboard-factory .dashboard-view :is(
+  .order-dashboard-menu,
+  .motoboy-header,
+  .cozinha-toolbar,
+  .caixa-header-actions,
+  .frituras-header,
+  .clientes-toolbar
+) {
+  min-height: 58px;
+  padding: 9px 11px;
+  border: 1px solid var(--sys-color-line);
+  border-radius: 14px;
+  background: var(--sys-color-surface);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.025);
+}
+
+.dashboard-factory .dashboard-view .order-dashboard-menu {
+  margin-bottom: 14px;
+  background: var(--sys-color-surface);
+}
+
+.dashboard-factory .dashboard-view :is(
+  .order-dashboard-menu .data-button-list,
+  .analytics-container .data-button-list,
+  .cozinha-filtros,
+  .clientes-periodos,
+  .pdv-abas
+) {
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--sys-color-line);
+  border-radius: 10px;
+  background: var(--sys-color-input-bg);
+  box-shadow: none;
+}
+
+.dashboard-factory .dashboard-view :is(
+  .order-dashboard-menu .data-button-list,
+  .analytics-container .data-button-list
+) button,
+.dashboard-factory .dashboard-view :is(
+  .cozinha-filtros,
+  .clientes-periodos,
+  .pdv-abas
+) button {
+  min-height: 34px;
+  padding: 7px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+}
+
+.dashboard-factory .dashboard-view :is(
+  .order-dashboard-menu .data-button-list,
+  .analytics-container .data-button-list,
+  .cozinha-filtros,
+  .clientes-periodos,
+  .pdv-abas
+) button.active {
+  color: var(--sys-color-text-main);
+  background: var(--sys-color-surface);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.09);
+}
+
+.dashboard-factory .dashboard-view .search-box input {
+  min-height: 40px;
+  border-radius: 10px;
+  background: var(--sys-color-input-bg);
+  box-shadow: none;
+}
+
+.dashboard-factory .dashboard-view :is(.kpi-row, .clientes-kpi-grid) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 12px;
+}
+
+.dashboard-factory .dashboard-view :is(.kpi-card, .clientes-kpi-card) {
+  position: relative;
+  overflow: hidden;
+  min-height: 108px;
+  padding: 17px 18px;
+  border: 1px solid var(--sys-color-line);
+  border-radius: 14px;
+  background: var(--sys-color-surface);
+}
+
+.dashboard-factory .dashboard-view :is(.kpi-card, .clientes-kpi-card)::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--sys-color-accent);
+  opacity: 0.72;
+}
+
+.dashboard-factory .dashboard-view :is(.kpi-card h2, .clientes-kpi-valor) {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.035em;
+}
+
+.dashboard-factory .dashboard-view .cozinha-dashboard {
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--sys-color-line);
+  border-radius: 14px;
+  background-color: var(--sys-color-surface-subtle);
+  background-image:
+    radial-gradient(circle, var(--sys-color-line-strong) 1px, transparent 1.15px),
+    radial-gradient(circle at 45% 20%, rgba(var(--sys-color-accent-rgb), 0.035), transparent 38%);
+  background-position: 0 0, 0 0;
+  background-size: 20px 20px, 100% 100%;
+}
+
+.dashboard-factory .dashboard-view .cozinha-cabecalho {
+  min-height: 44px;
+  padding: 0 2px;
+}
+
+.dashboard-factory .dashboard-view :is(.lists > section, .kanban-column) {
+  padding: 16px;
+  border: 1px solid var(--sys-color-line);
+  border-radius: 14px;
+  background: var(--sys-color-surface-subtle);
+}
+
+.dashboard-factory .dashboard-view .caixa-dashboard { gap: 16px; }
+.dashboard-factory .dashboard-view .caixa-kanban { gap: 14px; }
+.dashboard-factory .dashboard-view .kanban-column { max-height: calc(100vh - 280px); }
+
+.dashboard-factory .dashboard-view .audit-card {
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--sys-color-surface);
+}
+
+.dashboard-factory .dashboard-view .frituras-header {
+  margin-bottom: 14px;
+  background: var(--sys-color-surface);
+}
+
+.dashboard-factory .dashboard-view .frituras-layout { gap: 16px; }
+.dashboard-factory .dashboard-view .frituras-sidebar { width: 310px; gap: 14px; }
+.dashboard-factory .dashboard-view :is(.frituras-calendar-card, .resumo-card) { border-radius: 14px; }
+.dashboard-factory .dashboard-view .fritura-card { border-radius: 13px; }
+
+.dashboard-factory .dashboard-view .analytics-container { gap: 14px; }
+.dashboard-factory .dashboard-view .analytics-row { gap: 12px; }
+.dashboard-factory .dashboard-view .analytics-card {
+  padding: 17px 18px;
+  border-radius: 14px;
+}
+.dashboard-factory .dashboard-view .analytics-card h3 {
+  margin-bottom: 13px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--sys-color-line);
+}
+
+.dashboard-factory .dashboard-view .clientes-dashboard { gap: 14px; }
+.dashboard-factory .dashboard-view .clientes-secao {
+  padding: 17px 18px;
+  border: 1px solid var(--sys-color-line);
+  border-radius: 14px;
+  background: var(--sys-color-surface);
+}
+
+.dashboard-factory .dashboard-view .pdv-abas-wrap {
+  padding: 5px 0 14px;
+  background: var(--sys-color-background);
+  backdrop-filter: none;
+}
+.dashboard-factory .dashboard-view .pdv-page-header { margin-bottom: 20px; }
+.dashboard-factory .dashboard-view .pdv-page-header h1 { font-size: 1.45rem; font-weight: 760; }
+
+.dashboard-factory .dashboard-view .produtos-categoria { margin-bottom: 26px; }
+.dashboard-factory .dashboard-view .produtos-grid {
+  grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
+  gap: 13px;
+}
+.dashboard-factory .dashboard-view .produto-card { border-radius: 14px; }
+.dashboard-factory .dashboard-view .produto-card-imagem { height: 144px; }
+
+.dashboard-factory .dashboard-view :is(
+  .cozinha-vazio,
+  .frituras-empty,
+  .clientes-vazio,
+  .produtos-empty
+) {
+  min-height: 220px;
+  border: 1px dashed var(--sys-color-line-strong);
+  background: var(--sys-color-surface-subtle);
+}
+
+@media (max-width: 900px) {
+  .dashboard-factory .dashboard-view .frituras-layout { flex-direction: column; }
+  .dashboard-factory .dashboard-view .frituras-sidebar { position: static; width: 100%; }
+}
+
+@media (max-width: 666px) {
+  .dashboard-factory .dashboard-view { padding: 0; }
+  .dashboard-factory .dashboard-view :is(
+    .order-dashboard-menu,
+    .motoboy-header,
+    .cozinha-toolbar,
+    .caixa-header-actions,
+    .frituras-header,
+    .clientes-toolbar
+  ) {
+    min-height: 0;
+    padding: 8px;
+    border-radius: 12px;
+  }
+  .dashboard-factory .dashboard-view :is(.analytics-row, .caixa-kanban) {
+    flex-direction: column;
+  }
+  .dashboard-factory .dashboard-view .analytics-card,
+  .dashboard-factory .dashboard-view .kanban-column {
+    width: 100%;
+  }
+}
+
+/* Densidade operacional: reduz blocos grandes sem sacrificar legibilidade */
+.dashboard-factory .dashboard-view :is(
+  .order-dashboard-menu,
+  .motoboy-header,
+  .cozinha-toolbar,
+  .caixa-header-actions,
+  .frituras-header,
+  .clientes-toolbar
+) {
+  min-height: 48px;
+  padding: 7px 9px;
+  border-radius: 11px;
+}
+
+.dashboard-factory .dashboard-view :is(
+  .order-dashboard-menu .data-button-list,
+  .analytics-container .data-button-list,
+  .cozinha-filtros,
+  .clientes-periodos,
+  .pdv-abas
+) button {
+  min-height: 30px;
+  padding: 5px 10px;
+  font-size: 0.73rem;
+}
+
+.dashboard-factory .dashboard-view :is(.kpi-card, .clientes-kpi-card) {
+  min-height: 86px;
+  padding: 13px 15px;
+}
+
+.dashboard-factory .dashboard-view :is(.kpi-card h2, .clientes-kpi-valor) {
+  margin-top: 5px;
+  font-size: 1.35rem;
+}
+
+.dashboard-factory .dashboard-view :is(.lists > section, .kanban-column) {
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.dashboard-factory .dashboard-view .audit-card { padding: 12px; }
+.dashboard-factory .dashboard-view .analytics-card { padding: 14px 15px; }
+.dashboard-factory .dashboard-view .clientes-secao { padding: 14px 15px; }
+.dashboard-factory .dashboard-view .produto-card-imagem { height: 126px; }
+.dashboard-factory .dashboard-view .produtos-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+
+@media (max-width: 666px) {
+  .dashboard-factory .dashboard-view :is(.kpi-card, .clientes-kpi-card) {
+    min-height: 78px;
+  }
+}
+
+/* Vidro fosco (class="glass-panel" em qualquer div) */
+.glass-panel {
+  background-color: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+:root[data-theme="dark"] .glass-panel {
+  background-color: rgba(26, 27, 38, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* A linha de picote como utilidade global —
+   <hr class="perf-divider" /> ou border via token --sys-color-perf */
+.perf-divider {
+  border: none;
+  border-top: 1.5px dashed var(--sys-color-perf);
+  margin: 12px 0;
+}
+
+/* Números tabulares (ids, preços, telefones alinhados) */
+.tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Animações utilitárias */
+.fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ─── 8. TELA DE ENTRADA (auth em andamento) ────────────────── */
+/* O primeiro pixel da marca: o anel gira sobre uma trilha de
+   picote — a comanda dando a volta enquanto o acesso é conferido. */
+.app-boot {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: var(--sys-color-background);
+}
+
+.app-boot-spinner {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 3px dashed var(--sys-color-perf);
+  border-top: 3px solid var(--sys-color-primary);
+  animation: appBootSpin 0.9s linear infinite;
+}
+
+.app-boot-label {
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
+  color: var(--sys-color-text-muted);
+}
+
+@keyframes appBootSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── 9. MOVIMENTO REDUZIDO ─────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

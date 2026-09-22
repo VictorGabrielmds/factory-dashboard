@@ -1,0 +1,85 @@
+/* src/components/ErrorBoundary/ErrorBoundary.css */
+
+.error-boundary {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sys-color-background, #f5f5f5);
+  padding: 24px;
+  padding-top: max(24px, var(--safe-top, 0px));
+  padding-bottom: max(24px, var(--safe-bottom, 0px));
+  box-sizing: border-box;
+}
+
+.error-boundary-box {
+  background: var(--sys-color-surface, #fff);
+  border-radius: 16px;
+  padding: 40px 48px;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+  max-width: 440px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  .error-boundary-box {
+    padding: 28px 22px;
+  }
+
+  .error-boundary-box button {
+    width: 100%;
+    min-height: 46px;
+  }
+}
+
+.error-boundary-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.error-boundary-box h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--sys-color-text-main, #1a1a2e);
+  margin-bottom: 8px;
+}
+
+.error-boundary-box p {
+  color: var(--sys-color-text-muted, #666);
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.error-boundary-detail {
+  display: block;
+  background: var(--sys-color-danger-soft, #fef2f2);
+  border: 1px solid var(--sys-color-danger, #fecaca);
+  color: var(--sys-color-danger, #c62828);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  text-align: left;
+  margin-bottom: 24px;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.error-boundary-box button {
+  background: var(--sys-color-primary, #1a1a2e);
+  color: #fff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.error-boundary-box button:hover {
+  opacity: 0.85;
+}

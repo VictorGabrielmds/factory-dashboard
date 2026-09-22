@@ -1,0 +1,56 @@
+rules_version = '2';
+
+// ============================================================================
+// REGRAS DO FIREBASE STORAGE
+// Não existia nenhum arquivo de regras neste repo até agora — o bucket
+// estava com o que quer que estivesse configurado direto no Console. Este
+// arquivo passa a ser a fonte da verdade a partir do primeiro deploy.
+// ============================================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // Storage não deve confiar apenas em uma sessão Firebase: clientes do
+    // cardápio também se autenticam. O documento de equipe é a fronteira
+    // compartilhada com Firestore e as APIs administrativas. Durante a
+    // migração, documentos antigos sem o campo `ativo` continuam válidos;
+    // `ativo: false` revoga o acesso imediatamente.
+    function equipeAtiva() {
+      return request.auth != null &&
+        (
+          firestore.exists(/databases/(default)/documents/staff/$(request.auth.uid))
+            ? (
+              !("ativo" in firestore.get(/databases/(default)/documents/staff/$(request.auth.uid)).data) ||
+              firestore.get(/databases/(default)/documents/staff/$(request.auth.uid)).data.ativo != false
+            )
+            : false
+        );
+    }
+
+    function ehImagem() {
+      return request.resource.contentType.matches('image/.*');
+    }
+
+    function ateCincoMB() {
+      return request.resource.size < 5 * 1024 * 1024;
+    }
+
+    // Fotos do cardápio: vitrine pública, só a equipe ativa envia.
+    match /produtos/{arquivo} {
+      allow read: if true;
+      allow write: if equipeAtiva() && ehImagem() && ateCincoMB();
+    }
+
+    // Mídia de mensagens do WhatsApp (áudio/imagem) — já usado pelo
+    // ChatDashboard antes deste arquivo existir; mantém o mesmo
+    // comportamento (só a equipe ativa lê/escreve).
+    match /whatsapp_midia/{arquivo} {
+      allow read: if equipeAtiva();
+      allow write: if equipeAtiva();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

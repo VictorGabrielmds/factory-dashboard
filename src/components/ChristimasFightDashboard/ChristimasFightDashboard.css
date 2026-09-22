@@ -1,0 +1,406 @@
+.production-container {
+  padding: 20px;
+  background-color: #f4f6f8;
+  height: 100vh; /* MUDANÇA: Altura fixa da tela */
+  font-family: 'Segoe UI', sans-serif;
+  
+  /* NOVAS PROPRIEDADES FLEXBOX */
+  display: flex;
+  flex-direction: column; /* Organiza itens em coluna (um abaixo do outro) */
+  overflow: hidden; /* Remove a barra de rolagem da janela do navegador */
+  box-sizing: border-box; /* Garante que o padding não estoure o tamanho da tela */
+}
+
+/* Header & Switcher */
+.production-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.header-title h2 {
+  margin: 0;
+  color: #333;
+}
+.header-title p {
+  margin: 5px 0 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.date-switch {
+  display: flex;
+  background: white;
+  padding: 5px;
+  border-radius: 30px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.switch-btn {
+  border: none;
+  background: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+  color: #777;
+}
+
+.switch-btn.natal.active {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.switch-btn.ano-novo.active {
+  background-color: #fffde7;
+  color: #fbc02d;
+}
+
+/* Barra de Progresso */
+.progress-section {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.stats-text {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #444;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 12px;
+  background-color: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  transition: width 0.5s ease-in-out;
+}
+
+/* Grid de Cards */
+.production-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  overflow-y: auto;
+}
+
+.production-card {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  cursor: pointer;
+  border: 1px solid #eee;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  height: 108px;
+}
+
+.production-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.production-card.done {
+  background-color: #f9f9f9;
+  border-color: #e0e0e0;
+  opacity: 0.7;
+}
+
+.production-card.done .item-name {
+  text-decoration: line-through;
+  color: #888;
+}
+
+/* Icones e Texto do Card */
+.check-icon {
+  font-size: 1.5rem;
+  margin-top: 2px;
+}
+
+.icon-todo { color: #ccc; }
+.icon-done { color: #4caf50; }
+
+.card-content {
+  flex: 1;
+}
+
+.item-name {
+  display: block;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #333;
+  margin-bottom: 2px;
+  line-height: 1.4;
+}
+.item-quantity{
+  display: block;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #333;
+  margin-bottom: 8px;
+  margin-top: 0;
+  line-height: 1.4;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #666;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 8px;
+}
+
+.delivery-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #d32f2f; /* Destaca o horário */
+  font-weight: 600;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
+
+/* Estilos Novos para o DatePicker */
+.date-picker-wrapper {
+    position: relative; /* Importante para o popup ficar preso aqui */
+}
+
+.calendar-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #555;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.calendar-btn:hover {
+    background-color: #f9f9f9;
+    border-color: #ccc;
+    color: #333;
+}
+
+.calendar-btn.active {
+    background-color: #e3f2fd;
+    color: #1976d2;
+    border-color: #1976d2;
+}
+
+.calendar-popup {
+    position: absolute;
+    top: 110%; /* Fica logo abaixo do botão */
+    right: 0;
+    z-index: 1000;
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    border: 1px solid #eee;
+}
+
+/* Ajuste fino para o react-datepicker ficar bonito dentro do popup */
+.react-datepicker {
+    font-family: 'Segoe UI', sans-serif !important;
+    border: none !important;
+}
+.react-datepicker__header {
+    background-color: #f4f6f8 !important;
+    border-bottom: none !important;
+}
+.react-datepicker__day--selected {
+    background-color: #d32f2f !important; /* Cor de Natal */
+    border-radius: 50% !important;
+}
+
+/* Header Actions: Para alinhar os botões */
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* Botão de Toggle */
+.view-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f0f0f0;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.2s;
+}
+
+.view-toggle-btn:hover {
+  background-color: #e0e0e0;
+}
+
+/* --- CARDS DE RESUMO --- */
+.summary-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  border-left: 5px solid #ff9800; /* Cor padrão: Pendente */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.summary-card.done {
+  border-left-color: #4caf50;
+  background-color: #f1f8e9;
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.summary-title {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+}
+
+.summary-total-badge {
+  background-color: #333;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.summary-details {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.summary-details p {
+  margin: 4px 0;
+}
+
+/* Mini barra de progresso dentro do card de resumo */
+.mini-progress-bg {
+  width: 100%;
+  height: 6px;
+  background-color: #eee;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.mini-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Alinhamento ao topo caso o titulo seja grande */
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.summary-title {
+  font-weight: bold;
+  font-size: 1rem;
+  color: #333;
+  flex: 1; /* Ocupa o espaço restante */
+}
+
+/* O BOTÃO NOVO */
+.batch-action-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: none;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+/* Estilo "Concluir Todos" */
+.batch-action-btn.do {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+.batch-action-btn.do:hover {
+  background-color: #bbdefb;
+}
+
+/* Estilo "Desfazer" */
+.batch-action-btn.undo {
+  background-color: #ffebee;
+  color: #c62828;
+}
+.batch-action-btn.undo:hover {
+  background-color: #ffcdd2;
+}
+
+/* Ajustes visuais nos detalhes do resumo */
+.summary-stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.summary-total-badge {
+  background-color: #444;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.summary-progress-text {
+  font-size: 0.85rem;
+  color: #666;
+}

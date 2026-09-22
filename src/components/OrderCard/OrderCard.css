@@ -1,0 +1,535 @@
+/* ═══════════════════════════════════════════════════════════════
+   OrderCard — "comanda enxuta"
+   Um único acento de cor (preço + ação primária), tudo mais em tons
+   neutros. O ritmo de "ponto médio" (·) é o fio condutor: aparece
+   nas tags do cabeçalho e na linha de fatos, dando ao card a
+   cadência de um recibo bem tipografado.
+   ═══════════════════════════════════════════════════════════════ */
+
+.order-card {
+  --oc-ink:        var(--sys-color-text-main);
+  --oc-ink-soft:   var(--sys-color-text-muted);
+  --oc-ink-faint:  var(--sys-color-text-faint);
+  --oc-accent:     var(--sys-color-accent, #32378E);
+  --oc-accent-ink: var(--sys-color-accent-hover, #262A6E);
+  --oc-accent-bg:  var(--sys-color-accent-soft, #F0F1FA);
+  --oc-line:       var(--sys-color-line);
+  --oc-perf:       var(--sys-color-perf);
+  --oc-paper:      var(--sys-color-surface);
+  --oc-ok:         var(--sys-color-success);
+  --oc-ok-bg:      var(--sys-color-success-soft);
+  --oc-ok-ink:     var(--sys-color-success-ink);
+  --oc-warn:       var(--sys-color-warning);
+  --oc-warn-dot:   var(--sys-color-warning-dot);
+  --oc-warn-bg:    var(--sys-color-warning-soft);
+  --oc-alert:      var(--sys-color-danger);
+  --oc-radius:     14px;
+
+  position: relative;
+  border-radius: var(--oc-radius);
+  background-color: var(--oc-paper);
+  border: 1px solid var(--oc-line);
+  border-left: 3px solid var(--oc-accent);
+  box-shadow: var(--sys-shadow-sm);
+  transition: box-shadow 0.16s ease, border-color 0.16s ease, transform 0.16s ease;
+  overflow: visible;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-card:hover {
+  border-color: var(--sys-color-line-hover);
+  border-left-color: var(--oc-accent);
+  box-shadow: var(--sys-shadow-md);
+  transform: translateY(-1px);
+}
+
+.order-card.selectable { cursor: pointer; }
+.order-card.selectable:active { opacity: 0.92; }
+
+.order-card.card-completed {
+  border-left-color: var(--oc-ok);
+}
+
+.order-card.card-completed:hover {
+  border-left-color: var(--oc-ok);
+}
+
+.order-card.checked-block {
+  border-color: var(--oc-accent);
+  background-color: var(--oc-accent-bg);
+  box-shadow: 0 0 0 1px var(--oc-accent);
+  transform: none;
+}
+
+.order-card.card-expanded { box-shadow: var(--sys-shadow-md); }
+
+.out-box-items {
+  position: static;
+  display: flex; background-color: var(--oc-alert);
+  color: #FFFFFF;
+  font-size: 0.64rem; font-weight: 800; width: 18px; height: 18px;
+  align-items: center; justify-content: center;
+  border-radius: 50%; border: 1px solid color-mix(in srgb, var(--oc-alert) 82%, #ffffff);
+  box-shadow: 0 2px 5px color-mix(in srgb, var(--oc-alert) 24%, transparent);
+  cursor: default;
+}
+
+.order-block {
+  position: relative; padding: 0.75rem 0.85rem 0.55rem;
+  display: flex; gap: 0.55rem; flex-direction: column;
+  box-sizing: border-box; font-size: 0.87rem; font-weight: 500; color: var(--oc-ink);
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+
+.oc-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.oc-head > .tooltip { flex: 0 0 auto; margin-top: 1px; }
+.trip-select-toggle {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  flex: 0 0 24px;
+  place-items: center;
+  border: 1.5px solid color-mix(in srgb, var(--oc-accent) 46%, var(--oc-line));
+  border-radius: 7px;
+  background: var(--oc-paper);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+.trip-select-toggle:hover {
+  border-color: var(--oc-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--oc-accent) 12%, transparent);
+}
+.trip-select-toggle[aria-pressed="true"] {
+  border-color: var(--oc-accent);
+  background: var(--oc-accent);
+}
+.oc-identity { display: flex; flex: 1 1 auto; flex-direction: column; gap: 3px; min-width: 0; }
+.oc-name {
+  font-size: 0.93rem; font-weight: 700; color: var(--oc-ink);
+  line-height: 1.25; overflow: hidden; text-overflow: ellipsis;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+
+.oc-tags { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+.oc-id { font-size: 0.66rem; font-weight: 600; letter-spacing: 0.3px; color: var(--oc-ink-faint); }
+.oc-dot { font-size: 0.7rem; color: var(--oc-ink-faint); }
+.oc-tag {
+  padding: 2px 6px;
+  border-radius: 5px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.15px;
+}
+.oc-tag--accent { color: var(--oc-accent-ink); background: var(--oc-accent-bg); }
+.oc-tag--ok { color: var(--oc-ok-ink); background: var(--oc-ok-bg); }
+.oc-tag--pickup { display: inline-flex; align-items: center; gap: 3px; color: var(--oc-ink); background: var(--sys-color-hover-bg); }
+.oc-tag--pickup svg { font-size: 0.85rem; }
+
+.oc-price { margin: 0; font-size: 1.08rem; font-weight: 800; color: var(--oc-ink); line-height: 1.2; white-space: nowrap; flex-shrink: 0; }
+.oc-price-currency { font-size: 0.68rem; font-weight: 700; color: var(--oc-ink-faint); vertical-align: 2px; margin-right: 1px; }
+
+/* Aviso financeiro local: o operador vê o conflito no próprio pedido. */
+.oc-pix-conflict {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr);
+  align-items: start;
+  gap: 8px;
+  padding: 8px 9px;
+  border: 1px solid color-mix(in srgb, var(--oc-alert) 20%, transparent);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--sys-color-danger-soft) 78%, var(--oc-paper));
+  color: var(--oc-ink-soft);
+}
+
+.oc-pix-conflict > svg {
+  margin-top: 1px;
+  color: var(--oc-alert);
+  font-size: 1rem;
+}
+
+.oc-pix-conflict > span {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.oc-pix-conflict strong {
+  color: var(--oc-alert);
+  font-size: 0.72rem;
+}
+
+.oc-pix-conflict-action {
+  grid-column: 2;
+  justify-self: start;
+  margin-top: 2px;
+  padding: 5px 8px;
+  border: 1px solid color-mix(in srgb, var(--oc-alert) 38%, var(--oc-line));
+  border-radius: 7px;
+  background: var(--oc-paper);
+  color: var(--oc-alert);
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 750;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 0.16s ease, border-color 0.16s ease;
+}
+
+.oc-pix-conflict-action:hover:not(:disabled) {
+  border-color: var(--oc-alert);
+  background: color-mix(in srgb, var(--sys-color-danger-soft) 60%, var(--oc-paper));
+}
+
+.oc-pix-conflict-action:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+/* ── Agendamento: data e horário em primeiro plano ─────────── */
+
+.oc-schedule {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: center;
+  gap: 9px;
+  padding: 7px 10px;
+  border: 1px solid color-mix(in srgb, var(--oc-warn) 15%, transparent);
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--oc-warn-bg) 78%, var(--oc-paper));
+}
+.oc-schedule-icon {
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--oc-warn) 10%, var(--oc-paper));
+  color: var(--oc-warn);
+}
+.oc-schedule-icon svg { font-size: 1rem; }
+.oc-schedule strong {
+  color: var(--oc-ink);
+  font-size: 0.8rem;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+/* Horário de hoje é parte do fluxo normal. Ele permanece legível sem disputar
+   atenção com exceções reais, que continuam usando a faixa âmbar acima. */
+.oc-schedule--today {
+  grid-template-columns: 18px minmax(0, 1fr);
+  gap: 6px;
+  padding: 1px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.oc-schedule--today .oc-schedule-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 0;
+  background: transparent;
+  color: var(--oc-ink-faint);
+}
+
+.oc-schedule--today .oc-schedule-icon svg {
+  font-size: 0.9rem;
+}
+
+.oc-schedule--today strong {
+  color: var(--oc-ink-soft);
+  font-size: 0.74rem;
+  font-weight: 650;
+}
+
+.oc-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+  gap: 7px 14px;
+}
+
+.oc-info-item {
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: start;
+  gap: 6px;
+  min-width: 0;
+}
+
+.oc-info-item > svg {
+  margin-top: 2px;
+  color: var(--oc-ink-faint);
+  font-size: 0.92rem;
+  flex-shrink: 0;
+}
+
+.oc-info-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.oc-info-label {
+  color: var(--oc-ink-faint);
+  font-size: 0.57rem;
+  font-weight: 750;
+  letter-spacing: 0.65px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.oc-info-value {
+  overflow: hidden;
+  color: var(--oc-ink-soft);
+  font-size: 0.76rem;
+  font-weight: 550;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+a.oc-info-value { text-decoration: none; }
+a.oc-info-value:hover { color: var(--oc-accent); text-decoration: underline; }
+
+.oc-info-value--payment {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 5px;
+  white-space: normal;
+}
+
+.oc-timeline {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 0;
+  color: var(--oc-ink-faint);
+  font-size: 0.67rem;
+  font-weight: 550;
+}
+
+.oc-timeline svg {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
+
+/* ── Pagamento ──────────────────────────────────────────────── */
+
+.pix-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.2px;
+  padding: 1px 7px; border-radius: 99px; flex-shrink: 0; line-height: 1.4;
+}
+.pix-chip-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.pix-chip--pago { background: var(--oc-ok-bg); color: var(--oc-ok-ink); }
+.pix-chip--pago .pix-chip-dot { background: var(--oc-ok); }
+.pix-chip--pendente { background: var(--oc-warn-bg); color: var(--oc-warn); }
+.pix-chip--pendente .pix-chip-dot { background: var(--oc-warn-dot); animation: pixPulse 1.6s ease-in-out infinite; }
+.pix-chip--estorno { background: #fff4db; color: #8a5a00; }
+.pix-chip--estorno .pix-chip-dot { background: #d99300; }
+.pix-chip--estornado { background: #fff0f0; color: #a63838; }
+.pix-chip--estornado .pix-chip-dot { background: #d44b4b; }
+
+@keyframes pixPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.45; transform: scale(0.85); }
+}
+
+/* ── Endereço expandido ─────────────────────────────────────── */
+
+.expanded-details {
+  background-color: var(--sys-color-input-bg);
+  padding: 9px 11px; border-radius: 9px; font-size: 0.8rem;
+  animation: slideDown 0.16s ease-out;
+}
+.address-label {
+  font-weight: 700; font-size: 0.62rem; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--oc-ink-faint); margin: 0 0 4px !important;
+}
+.expanded-details p { margin: 3px 0; color: var(--oc-ink-soft); }
+.expanded-details .complemento { font-style: italic; color: var(--oc-ink-faint); }
+
+.expanded-section + .expanded-section {
+  margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--oc-line);
+}
+
+.items-list {
+  margin: 0; padding-left: 16px; color: var(--oc-ink-soft); font-size: 0.79rem;
+}
+.items-list li { margin: 2px 0; }
+
+.maps-link {
+  display: flex; align-items: center; gap: 6px; margin-top: 8px;
+  text-decoration: none; color: var(--oc-accent); font-weight: 600;
+  font-size: 0.78rem; padding: 6px 10px; background: var(--oc-paper);
+  border: 1px solid var(--oc-line); border-radius: 8px;
+  justify-content: center; transition: background 0.15s, border-color 0.15s;
+}
+.maps-link:hover { background-color: var(--oc-accent-bg); border-color: var(--sys-color-line-strong); }
+
+/* ── Ações — separadas pelo "picote" da comanda ────────────── */
+
+.order-actions {
+  display: flex; align-items: center; justify-content: flex-end; gap: 6px;
+  padding-top: 9px; margin-top: 3px; border-top: 1px solid var(--oc-line); flex-wrap: wrap;
+}
+
+.btn-action {
+  font-family: 'Inter Variable', sans-serif; font-size: 0.76rem; font-weight: 700;
+  min-height: 32px; letter-spacing: 0.1px; padding: 0.4rem 0.9rem; border-radius: 8px;
+  border: none; cursor: pointer; transition: background 0.15s, color 0.15s;
+}
+
+.order-card .btn-action--primary {
+  background-color: var(--oc-accent); color: #fff;
+}
+.btn-action--primary:hover { background-color: var(--oc-accent-ink); }
+
+.btn-action--secondary {
+  background-color: transparent; border: 1px solid var(--sys-color-line-strong); color: var(--oc-accent);
+}
+.btn-action--secondary:hover { border-color: var(--oc-accent); background-color: var(--oc-accent-bg); }
+
+/* Ícones de gerenciar pedido: neutros até o hover — chrome que não compete
+   com a ação primária, mas continua fácil de achar. */
+.btn-icon {
+  display: flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 8px;
+  background: transparent; border: 1px solid transparent; color: var(--oc-ink-faint);
+  cursor: pointer; transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.btn-icon--edit:hover { color: var(--oc-accent); background: var(--oc-accent-bg); }
+.btn-icon--danger:hover { color: var(--oc-alert); background: var(--sys-color-danger-soft, var(--oc-warn-bg)); }
+
+.btn-expand {
+  background: none; border: none; cursor: pointer; color: var(--oc-ink-faint);
+  font-size: 0.72rem; font-weight: 600; display: flex; align-items: center;
+  gap: 3px; padding: 5px 7px; border-radius: 7px; margin-right: auto;
+  transition: color 0.15s, background 0.15s;
+}
+.btn-expand:hover { color: var(--oc-ink); background-color: var(--sys-color-hover-bg); }
+
+.order-card button:focus-visible, .order-card a:focus-visible { outline: 2px solid var(--oc-accent); outline-offset: 2px; border-radius: 8px; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+@keyframes slideDown { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .order-card, .btn-action, .btn-icon, .expanded-details { transition: none; animation: none; }
+  .pix-chip--pendente .pix-chip-dot { animation: none; }
+}
+
+/* Entrada breve só para pedidos que acabaram de chegar à lista. */
+@keyframes orderCardArrive {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.order-column > .order-card {
+  animation: orderCardArrive 0.2s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .order-column > .order-card {
+    animation: none;
+  }
+}
+
+/* Cartão leve: a coluna já dá o contexto; o cartão não precisa de outra moldura forte. */
+.order-section .order-card {
+  border-color: transparent;
+  border-left-color: var(--oc-accent);
+  box-shadow: 0 2px 8px -5px rgba(15, 23, 42, 0.2);
+}
+
+.order-section--completed .order-card {
+  border-left-color: var(--oc-ok);
+}
+
+.order-section .order-card:hover {
+  border-color: color-mix(in srgb, var(--sys-color-line-hover) 70%, transparent);
+  border-left-color: var(--oc-accent);
+  box-shadow: 0 9px 24px -17px rgba(15, 23, 42, 0.36);
+}
+
+.order-section--completed .order-card:hover {
+  border-left-color: var(--oc-ok);
+}
+
+.order-section .order-card.checked-block {
+  border-color: var(--oc-accent);
+  border-left-color: var(--oc-accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--oc-accent) 20%, transparent);
+}
+
+.order-section .order-card.has-pix-conflict,
+.order-section--completed .order-card.has-pix-conflict {
+  border-color: color-mix(in srgb, var(--oc-alert) 30%, transparent);
+  border-left-color: var(--oc-alert);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--oc-alert) 10%, transparent);
+}
+
+.order-section .order-card.has-pix-conflict:hover,
+.order-section--completed .order-card.has-pix-conflict:hover {
+  border-color: color-mix(in srgb, var(--oc-alert) 42%, transparent);
+  border-left-color: var(--oc-alert);
+}
+
+.order-section .order-block {
+  gap: 0.62rem;
+  padding: 0.82rem 0.9rem 0.62rem;
+}
+
+.order-section .oc-dot {
+  display: none;
+}
+
+.order-section .oc-tags {
+  gap: 4px;
+}
+
+.order-section .oc-info-item > svg {
+  color: var(--oc-accent);
+  opacity: 0.62;
+}
+
+.order-section--completed .oc-info-item > svg {
+  color: var(--oc-ok);
+}
+
+.order-section .expanded-details {
+  background: color-mix(in srgb, var(--sys-color-input-bg) 72%, transparent);
+}
+
+.order-section .order-actions {
+  margin-top: 1px;
+  padding-top: 5px;
+  border-top: 0;
+}
+
+.order-section .btn-expand {
+  padding-left: 0;
+}

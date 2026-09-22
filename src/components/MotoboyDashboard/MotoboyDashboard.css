@@ -1,0 +1,2626 @@
+/* ═══════════════════════════════════════════════════════════════
+   MotoboyDashboard — o livro-caixa dos motoboys
+   A tabela é o coração: picote sob o cabeçalho (a linha de rasgo
+   do livro), valores tabulares, ponto verde de "rodou hoje" ao
+   lado do nome. O histórico de cada motoboy é a comanda que ele
+   entregaria no fim do dia. Cobre também: painel flutuante de
+   fechamento (EntregasHoje), wizard de extra (AddOrderButtom) e
+   o botão animado (AnimatedButtonCSS) — que não tinham estilo.
+   ═══════════════════════════════════════════════════════════════ */
+
+.motoboy-dashboard {
+  /* Tokens — a mesma família dos outros módulos */
+  --oc-ink:        var(--sys-color-text-main, #1C1D26);
+  --oc-ink-soft:   var(--sys-color-text-muted, #5A5C6E);
+  --oc-ink-faint:  var(--sys-color-text-faint, #9A9CB0);
+  --oc-accent:     var(--sys-color-accent, #32378E);
+  --oc-accent-ink: var(--sys-color-accent-hover, #262A6E);
+  --oc-accent-bg:  var(--sys-color-accent-soft, #F0F1FA);
+  --oc-line:       var(--sys-color-line, #E8E9F1);
+  --oc-perf:       var(--sys-color-perf, #D5D7E4);
+  --oc-paper:      var(--sys-color-surface, #FFFFFF);
+  --oc-ok:         var(--sys-color-success, #06A77D);
+  --oc-ok-ink:     var(--sys-color-success-ink, #04815F);
+  --oc-ok-bg:      var(--sys-color-success-soft, #EDF9F5);
+  --oc-warn:       var(--sys-color-warning, #B45309);
+  --oc-warn-dot:   var(--sys-color-warning-dot, #F59E0B);
+  --oc-warn-bg:    var(--sys-color-warning-soft, #FDF4E3);
+  --oc-alert:      var(--sys-color-danger, #D81E5C);
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  min-height: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Cabeçalho do módulo ──────────────────────────────────── */
+
+.motoboy-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+/* Carimbo da cooperativa: gatilho de ações + total do dia */
+.motoboy-header .text-coop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.motoboy-header .text-coop span {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  color: var(--oc-ink-faint);
+}
+
+.motoboy-header .text-coop p {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--oc-ink);
+  line-height: 1;
+}
+
+.motoboy-header .motoboy-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.motoboy-header .search-box {
+  max-width: 280px;
+  flex: 1;
+}
+
+.motoboy-header .search-box input {
+  border-radius: var(--radius-pill, 30px);
+  padding: 10px 18px;
+  background-color: var(--oc-paper);
+  border: 1px solid var(--oc-line);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Botão "+ Motoboy" */
+.motoboy-header .motoboy-title > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: var(--radius-pill, 30px);
+  background-color: var(--oc-accent);
+  color: #fff;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  border: none;
+  box-shadow: 0 1px 2px rgba(var(--sys-color-accent-rgb), 0.3);
+  flex-shrink: 0;
+}
+
+.motoboy-header .motoboy-title > button:hover {
+  background-color: var(--oc-accent-ink);
+  box-shadow: var(--shadow-primary);
+  transform: translateY(-1px);
+}
+
+/* ─── A tabela: o livro-caixa ──────────────────────────────── */
+
+.motoboy-dashboard .table-container {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: var(--oc-paper);
+  border: 1px solid var(--oc-line);
+  border-radius: var(--radius-card, 16px);
+  box-shadow: var(--shadow-soft);
+}
+
+.motoboy-dashboard .md-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+
+.motoboy-dashboard .table-container thead {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--oc-paper);
+}
+
+.motoboy-dashboard .table-container thead th {
+  text-align: left;
+  padding: 14px 16px 10px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--oc-ink-faint);
+  /* a linha de rasgo do livro-caixa */
+  border-bottom: 1.5px dashed var(--oc-perf);
+  white-space: nowrap;
+}
+
+.motoboy-dashboard .md-table tbody tr {
+  transition: background 0.12s ease;
+}
+
+.motoboy-dashboard .md-table tbody tr:hover {
+  background-color: var(--sys-color-hover-bg, #FAFAFD);
+}
+
+.motoboy-dashboard .md-table tbody tr td {
+  padding: 12px 16px;
+  font-size: 0.86rem;
+  color: var(--oc-ink);
+  border-bottom: 1px solid var(--oc-line);
+  vertical-align: middle;
+}
+
+.motoboy-dashboard .md-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Nome clicável → histórico, com o ponto de "rodou hoje".
+   ⚠️ A classe vive num <td>: nunca mudar o display dele (flex tira
+   a célula do layout da tabela e desalinha a borda da linha). */
+.clickable-name {
+  font-weight: 600;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+
+.clickable-name::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  margin-right: 9px;
+  vertical-align: 1px; /* alinha o ponto opticamente com o texto */
+  background: var(--oc-line);
+}
+
+.active-moto .clickable-name::before {
+  background: var(--oc-ok); /* rodou hoje */
+}
+
+.clickable-name:hover {
+  color: var(--oc-accent);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+/* Quem não rodou hoje recua, sem sumir */
+.motoboy-dashboard .md-table tbody tr.non-active-moto td {
+  color: var(--oc-ink-faint);
+}
+
+.motoboy-dashboard .md-table tbody tr.non-active-moto:hover td {
+  color: var(--oc-ink-soft);
+}
+
+/* Números em coluna (entregas, taxas) */
+.motoboy-dashboard .md-table td:nth-child(2),
+.motoboy-dashboard .md-table td:nth-child(3) {
+  font-weight: 700;
+}
+
+/* ─── Chips e botões de linha ──────────────────────────────── */
+
+/* Chip "Fixo": apagado quando não; índigo quando fixo da casa */
+.is-fixed {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: transparent;
+  border: 1.5px solid var(--oc-line);
+  color: var(--oc-ink-faint);
+  cursor: pointer;
+}
+
+.is-fixed span {
+  display: inline-flex;
+  font-size: 0.5rem;
+  color: var(--oc-line);
+  transition: color 0.15s ease;
+}
+
+.is-fixed:hover {
+  border-color: var(--sys-color-line-strong, #C9CCE8);
+  color: var(--oc-ink-soft);
+}
+
+.is-fixed.fixed-motoboy {
+  background: var(--oc-accent-bg);
+  border-color: transparent;
+  color: var(--oc-accent);
+}
+
+.is-fixed.fixed-motoboy span {
+  color: var(--oc-accent);
+}
+
+.is-fixed.fixed-motoboy:hover {
+  background: var(--sys-color-line-hover, #E4E6F7);
+}
+
+/* Pagar: a ação de dinheiro é verde */
+.pay-button {
+  padding: 7px 16px;
+  border-radius: 9px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: transparent;
+  border: 1.5px solid var(--sys-color-success-soft, #BFE8DB);
+  color: var(--oc-ok-ink);
+}
+
+.pay-button:hover {
+  background: var(--oc-ok);
+  border-color: var(--oc-ok);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(6, 167, 125, 0.28);
+}
+
+/* Excluir: quieto até o hover */
+.trash-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--oc-ink-faint);
+  font-size: 1.05rem;
+}
+
+.trash-button:hover {
+  background: var(--sys-color-danger-soft, #FCE8EF);
+  color: var(--oc-alert);
+}
+
+/* Pendências (maquininha na rua): âmbar de atenção */
+.extras-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 8px;
+  background: var(--oc-warn-bg);
+  border: none;
+  color: var(--oc-warn-dot);
+  font-size: 1rem;
+}
+
+.extras-button:hover {
+  background: var(--sys-color-warning-soft, #FBE8C6);
+  color: var(--oc-warn);
+}
+
+/* Linha de carregamento */
+.loading-form td {
+  text-align: center;
+  padding: 32px 16px !important;
+}
+
+.loading-form span {
+  color: var(--oc-ink-faint);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+/* ═══ PAINEL FLUTUANTE — fechamento do dia (EntregasHoje) ═════ */
+
+/* O gatilho vive no cabeçalho; o painel abre PARA BAIXO dele.
+   (Antes abria para cima com bottom:60px — a partir do topo da
+   página, estourava a tela.) */
+.help-btn {
+  position: relative;
+  display: inline-flex;
+}
+
+/* Botão animado (AnimatedButtonCSS) — não tinha estilo nenhum */
+.icon-button {
+  display: inline-flex;
+}
+
+.icon-container {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 50%;
+  background: var(--oc-paper);
+  border: 1px solid var(--oc-line);
+  box-shadow: var(--shadow-soft);
+  color: var(--oc-ink-soft);
+  font-size: 1.15rem;
+  overflow: hidden;
+}
+
+.icon-container:hover {
+  color: var(--oc-accent);
+  border-color: var(--sys-color-line-strong, #C9CCE8);
+}
+
+/* Aberto: preenche de índigo */
+.icon-container.u {
+  background: var(--oc-accent);
+  border-color: var(--oc-accent);
+  color: #fff;
+  box-shadow: var(--shadow-primary);
+}
+
+/* Troca de ícones: os dois spans ocupam a mesma célula do grid
+   e revezam com giro + fade */
+.icon-container .scale {
+  grid-area: 1 / 1;
+  display: inline-flex;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.2s ease;
+}
+
+.icon-container.z .scale:first-child  { opacity: 1; transform: rotate(0) scale(1); }
+.icon-container.z .scale:last-child   { opacity: 0; transform: rotate(90deg) scale(0.5); }
+.icon-container.u .scale:first-child  { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+.icon-container.u .scale:last-child   { opacity: 1; transform: rotate(0) scale(1); }
+
+/* O painel em si */
+.closure-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  width: 340px;
+  background-color: var(--oc-paper);
+  border-radius: var(--radius-card, 16px);
+  border: 1px solid var(--oc-line);
+  box-shadow: 0 4px 10px rgba(28, 29, 38, 0.06), 0 18px 42px rgba(28, 29, 38, 0.16);
+  opacity: 0;
+  transform: translateY(-8px) scale(0.97);
+  transform-origin: top left;
+  pointer-events: none;
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+  z-index: 300;
+}
+
+.closure-panel.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Cabeçalho do painel: título + picote */
+.closure-panel header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1.5px dashed var(--oc-perf);
+}
+
+.closure-panel header h2 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--oc-ink);
+  margin: 0;
+}
+
+.closure-panel section {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: var(--oc-ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  margin-bottom: 6px;
+}
+
+.closure-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: closureIn 0.2s ease-out;
+}
+
+@keyframes closureIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* A linha de total — como o rodapé de um recibo */
+.money-info {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--sys-color-surface-subtle, #FBFBFE);
+  border: 1px solid var(--oc-line);
+  border-radius: 10px;
+  padding: 10px 14px;
+}
+
+.money-info span {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--oc-ink-faint);
+}
+
+.money-info strong {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--oc-ink);
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.action-buttons > * {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Processar pagamento: separado pelo picote — é o "rasgo" final */
+.process-payment-area {
+  border-top: 1.5px dashed var(--oc-perf);
+  padding-top: 12px;
+}
+
+.primary-btn {
+  background-color: var(--oc-ok);
+  color: #fff;
+  border: none;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.2px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 1px 2px rgba(6, 167, 125, 0.3);
+}
+
+.primary-btn:hover {
+  background-color: var(--oc-ok-ink);
+  box-shadow: 0 6px 16px rgba(6, 167, 125, 0.28);
+  transform: translateY(-1px);
+}
+
+.payment-btn {
+  width: 100%;
+}
+
+.secondary-btn {
+  background-color: transparent;
+  border: 1.5px solid var(--sys-color-line-strong, #C9CCE8);
+  color: var(--oc-accent);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 10px 12px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.secondary-btn:hover {
+  border-color: var(--oc-accent);
+  background: var(--oc-accent-bg);
+}
+
+/* ═══ WIZARD DE EXTRA (AddOrderButtom) ════════════════════════ */
+
+.add-order-div {
+  width: 100%;
+  min-width: 0;
+}
+
+.add-order-div > .secondary-btn {
+  width: 100%;
+}
+
+.btn-false {
+  display: none;
+}
+
+.add-order-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.inputs-container {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+}
+
+.step-input {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  border-radius: 10px;
+}
+
+.step-input.input-false {
+  display: none;
+}
+
+.step-input.input-true {
+  display: block;
+  animation: closureIn 0.18s ease-out;
+}
+
+.step-input.error-class {
+  border-color: var(--oc-alert);
+  box-shadow: 0 0 0 4px rgba(216, 30, 92, 0.09);
+  animation: shakeNo 0.3s ease;
+}
+
+@keyframes shakeNo {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-4px); }
+  75%      { transform: translateX(4px); }
+}
+
+/* Botões do passo: X (cancela) e → (avança) */
+.index-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 10px;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+  border: none;
+}
+
+.index-button.input-false {
+  display: none;
+}
+
+.index-button.cancel {
+  background: transparent;
+  border: 1.5px solid var(--oc-line);
+  color: var(--oc-ink-faint);
+}
+
+.index-button.cancel:hover {
+  border-color: var(--sys-color-danger-soft, #F3C3D4);
+  background: var(--sys-color-danger-soft, #FCE8EF);
+  color: var(--oc-alert);
+}
+
+.index-button.next {
+  background: var(--oc-accent);
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(var(--sys-color-accent-rgb), 0.3);
+}
+
+.index-button.next:hover {
+  background: var(--oc-accent-ink);
+  box-shadow: var(--shadow-primary);
+}
+
+.index-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.add-order-step {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  padding: 11px;
+  border: 1px solid var(--oc-line);
+  border-radius: 12px;
+  background: var(--sys-color-surface-subtle, #fbfbfe);
+  animation: closureIn 0.18s ease-out;
+}
+
+.add-order-step-copy {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+}
+
+.add-order-step-copy span {
+  color: var(--oc-accent);
+  font-size: 0.61rem;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.add-order-step-copy strong {
+  color: var(--oc-ink);
+  font-size: 0.76rem;
+  font-weight: 720;
+  text-align: right;
+}
+
+.add-order-error {
+  margin: -1px 0 0;
+  color: var(--oc-alert);
+  font-size: 0.68rem;
+  font-weight: 650;
+  text-align: left;
+}
+
+/* ═══ MODAL DE HISTÓRICO — a comanda do dia do motoboy ════════ */
+
+.history-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.history-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 13px 14px;
+  border: 1px solid var(--oc-line);
+  border-radius: 14px;
+  background: var(--sys-color-surface-subtle, #fbfbfe);
+}
+
+.history-date-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.date-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: var(--oc-ink-soft);
+}
+
+.date-nav-btn:hover:not(:disabled) {
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+}
+
+.date-nav-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.history-date-picker {
+  position: relative;
+}
+
+.date-display-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border-radius: 99px;
+  background: var(--oc-paper);
+  border: 1px solid var(--oc-line);
+  color: var(--oc-ink);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.date-display-btn:hover {
+  border-color: var(--sys-color-line-strong, #C9CCE8);
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+}
+
+.history-calendar-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  background: var(--oc-paper);
+  border-radius: var(--radius-card, 16px);
+  border: 1px solid var(--oc-line);
+  box-shadow: 0 4px 10px rgba(28, 29, 38, 0.06), 0 18px 42px rgba(28, 29, 38, 0.16);
+  overflow: hidden;
+  padding: 6px;
+  animation: closureIn 0.18s ease-out;
+}
+
+/* Datepicker com a pele do sistema (mesma do OrderDashboard) */
+.history-calendar-popover .react-datepicker {
+  border: none;
+  font-family: 'Inter Variable', sans-serif;
+  background: transparent;
+}
+
+.history-calendar-popover .react-datepicker__header {
+  background: transparent;
+  border-bottom: 1.5px dashed var(--oc-perf);
+  padding-top: 10px;
+}
+
+.history-calendar-popover .react-datepicker__current-month {
+  color: var(--oc-ink) !important;
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.history-calendar-popover .react-datepicker__day-name {
+  color: var(--oc-ink-faint);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  width: 2rem;
+}
+
+.history-calendar-popover .react-datepicker__day {
+  color: var(--oc-ink-soft);
+  font-size: 0.8rem;
+  width: 2rem;
+  line-height: 2rem;
+  border-radius: 9px;
+}
+
+.history-calendar-popover .react-datepicker__day:hover {
+  background-color: var(--oc-accent-bg);
+  color: var(--oc-accent);
+}
+
+.history-calendar-popover .react-datepicker__day--today {
+  font-weight: 800;
+  color: var(--oc-accent);
+}
+
+.history-calendar-popover .react-datepicker__day--selected,
+.history-calendar-popover .react-datepicker__day--keyboard-selected {
+  background-color: var(--oc-accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+.history-calendar-popover .react-datepicker__navigation {
+  top: 12px;
+}
+
+.history-calendar-popover .react-datepicker__navigation-icon::before {
+  border-color: var(--oc-ink-faint);
+  border-width: 2px 2px 0 0;
+}
+
+/* Resumo do dia: os dois carimbos */
+.history-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-left: 14px;
+  border-left: 1px solid var(--oc-line);
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summary-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--oc-ink-faint);
+}
+
+.summary-value {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--oc-ink);
+  line-height: 1.1;
+}
+
+.summary-value.highlight {
+  color: var(--oc-ok-ink);
+}
+
+.summary-divider {
+  width: 1px;
+  height: 26px;
+  background: var(--oc-line);
+}
+
+/* A lista de entregas do dia — linhas de comanda atrás do picote */
+.order-history-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1.5px dashed var(--oc-perf);
+  padding-top: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-history-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 6px;
+  border-bottom: 1px solid var(--oc-line);
+  border-radius: 6px;
+  transition: background 0.12s ease;
+}
+
+.order-history-row:last-child {
+  border-bottom: none;
+}
+
+.order-history-row:hover {
+  background: var(--sys-color-hover-bg, #FAFAFD);
+}
+
+.order-history-index {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--oc-ink-faint);
+  min-width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.order-history-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.order-history-name {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--oc-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.order-history-id {
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: var(--oc-ink-faint);
+}
+
+.order-history-time {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--oc-ink-soft);
+  flex-shrink: 0;
+}
+
+.order-history-value {
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: var(--oc-ink);
+  min-width: 74px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.order-history-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 2.2rem 1rem;
+  border: 1.5px dashed var(--oc-perf);
+  border-radius: 12px;
+  color: var(--oc-ink-faint);
+}
+
+.order-history-empty svg {
+  opacity: 0.55;
+}
+
+.order-history-empty p {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 500;
+}
+
+/* Rodapé do histórico: lançar extra atrás do picote */
+.options-orders-modal {
+  border-top: 1.5px dashed var(--oc-perf);
+  padding-top: 12px;
+}
+
+.options-orders-modal p {
+  margin: 0;
+}
+
+/* ═══ MODAIS DIVERSOS (excluir / pagar / cadastro) ════════════ */
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-buttons button {
+  padding: 11px 18px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  border: none;
+  cursor: pointer; /* Adicionado cursor */
+}
+
+.modal-buttons button.primary {
+  background-color: var(--sys-color-primary); /* Usando variável GLOBAL */
+  color: #fff !important; /* Forçando branco */
+  box-shadow: var(--sys-shadow-sm); /* Usando sombra GLOBAL */
+}
+
+.modal-buttons button.primary:hover {
+  background-color: var(--sys-color-primary-hover);
+  transform: translateY(-1px);
+}
+
+.modal-buttons button.secondary {
+  background: transparent;
+  border: 1.5px solid var(--sys-color-line-strong);
+  color: var(--sys-color-primary);
+}
+
+.modal-buttons button.secondary:hover {
+  border-color: var(--sys-color-primary);
+  background: var(--sys-color-primary-soft);
+  color: var(--sys-color-primary);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-size: 0.64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  color: var(--oc-ink-faint);
+  margin-bottom: 6px;
+}
+
+/* Switch (cadastro: "fixo da casa") — o mesmo da viagem */
+.switch-wrapper {
+  display: flex;
+}
+
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.switch .slider {
+  position: relative;
+  width: 46px;
+  height: 27px;
+  background-color: var(--sys-color-line-strong, #DCDEE9);
+  transition: background 0.25s ease;
+  border-radius: 30px;
+  flex-shrink: 0;
+}
+
+.switch .slider::before {
+  position: absolute;
+  content: "";
+  height: 21px;
+  width: 21px;
+  left: 3px;
+  top: 3px;
+  background-color: var(--oc-paper, #fff);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(28, 29, 38, 0.25);
+}
+
+.switch input:checked ~ .slider {
+  background-color: var(--oc-accent);
+}
+
+.switch input:checked ~ .slider::before {
+  transform: translateX(19px);
+}
+
+.switch input:focus-visible ~ .slider {
+  outline: 2px solid var(--oc-accent);
+  outline-offset: 2px;
+}
+
+.switch .slider-label {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--oc-ink);
+}
+
+/* ─── Movimento reduzido ───────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .closure-panel,
+  .closure-details,
+  .icon-container .scale,
+  .step-input.input-true,
+  .step-input.error-class,
+  .history-calendar-popover {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* ─── Mobile ───────────────────────────────────────────────── */
+
+@media (max-width: 760px) {
+  .motoboy-header {
+    align-items: stretch;
+  }
+
+  .motoboy-header .motoboy-title {
+    justify-content: stretch;
+  }
+
+  .motoboy-header .search-box {
+    max-width: none;
+  }
+
+  /* Colunas Fixo e Excluir saem; Pagar e Pendências ficam */
+  .motoboy-dashboard .md-table th:nth-child(4),
+  .motoboy-dashboard .md-table td:nth-child(4),
+  .motoboy-dashboard .md-table th:nth-child(6),
+  .motoboy-dashboard .md-table td:nth-child(6) {
+    display: none;
+  }
+
+  .motoboy-dashboard .md-table {
+    min-width: 0;
+  }
+
+  .closure-panel {
+    width: min(340px, calc(100vw - 32px));
+  }
+
+  .history-modal-content {
+    min-width: 0;
+  }
+}
+
+/* ═══ CENTRAL DE MOTOBOYS — visão operacional moderna ═══════ */
+
+.motoboy-overview {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  padding: 12px 16px;
+  border: 1px solid var(--oc-line);
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 86% 10%, rgba(var(--sys-color-accent-rgb), 0.09), transparent 30%),
+    var(--oc-paper);
+  box-shadow: 0 8px 24px rgba(28, 29, 38, 0.045);
+}
+
+.motoboy-overview-copy {
+  flex: 1 1 205px;
+  min-width: 190px;
+}
+
+.motoboy-overview-kicker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 6px;
+  color: var(--oc-ok-ink);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.75px;
+  text-transform: uppercase;
+}
+
+.motoboy-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--oc-ok);
+  box-shadow: 0 0 0 4px var(--oc-ok-bg);
+}
+
+.motoboy-overview-copy h2 {
+  margin: 0;
+  color: var(--oc-ink);
+  font-size: clamp(1.1rem, 1.7vw, 1.35rem);
+  font-weight: 780;
+  letter-spacing: -0.025em;
+}
+
+.motoboy-overview-copy p {
+  display: none;
+}
+
+.motoboy-metrics {
+  display: flex;
+  align-items: stretch;
+  flex: 0 1 auto;
+  justify-content: center;
+  min-width: 0;
+}
+
+.motoboy-metric {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 112px;
+  padding: 2px 12px;
+  border-left: 1px solid var(--oc-line);
+}
+
+.motoboy-metric:first-child {
+  border-left: 0;
+}
+
+.motoboy-metric-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+  font-size: 1.05rem;
+}
+
+.motoboy-metric > span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.motoboy-metric small {
+  color: var(--oc-ink-faint);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.45px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.motoboy-metric strong {
+  color: var(--oc-ink);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
+.motoboy-overview-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.motoboy-add-button,
+.icon-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.motoboy-add-button {
+  border: 1px solid var(--oc-accent);
+  background: var(--oc-accent);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(var(--sys-color-accent-rgb), 0.2);
+}
+
+.motoboy-add-button:hover {
+  border-color: var(--oc-accent-ink);
+  background: var(--oc-accent-ink);
+  transform: translateY(-1px);
+}
+
+.icon-container {
+  width: auto;
+  border: 1px solid var(--oc-line);
+  background: var(--oc-paper);
+  color: var(--oc-ink-soft);
+  box-shadow: none;
+  overflow: visible;
+}
+
+.icon-container:hover {
+  border-color: var(--sys-color-line-strong, #c9cce8);
+  background: var(--sys-color-hover-bg);
+  color: var(--oc-accent);
+}
+
+.icon-container.u {
+  border-color: var(--sys-color-line-strong, #c9cce8);
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+  box-shadow: none;
+}
+
+.motoboy-team-panel {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--oc-line);
+  border-radius: 18px;
+  background: var(--oc-paper);
+  box-shadow: 0 8px 24px rgba(28, 29, 38, 0.04);
+}
+
+.motoboy-team-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 18px 9px;
+}
+
+.motoboy-team-title > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.motoboy-team-title h2 {
+  margin: 0;
+  color: var(--oc-ink);
+  font-size: 1rem;
+  font-weight: 780;
+  letter-spacing: -0.015em;
+}
+
+.motoboy-team-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 7px;
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.motoboy-team-title p {
+  margin: 3px 0 0;
+  color: var(--oc-ink-faint);
+  font-size: 0.72rem;
+}
+
+.motoboy-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: min(260px, 100%);
+}
+
+.motoboy-search > svg {
+  position: absolute;
+  left: 12px;
+  z-index: 1;
+  color: var(--oc-ink-faint);
+  pointer-events: none;
+}
+
+.motoboy-search input {
+  width: 100%;
+  height: 38px;
+  padding: 0 38px;
+  border: 1px solid var(--oc-line);
+  border-radius: 10px;
+  background: var(--sys-color-surface-subtle, #fbfbfe);
+  color: var(--oc-ink);
+  font-size: 0.8rem;
+  box-shadow: none;
+}
+
+.motoboy-search input:focus {
+  border-color: var(--oc-accent);
+  background: var(--oc-paper);
+  box-shadow: 0 0 0 3px rgba(var(--sys-color-accent-rgb), 0.1);
+}
+
+.motoboy-search input::-webkit-search-cancel-button {
+  display: none;
+}
+
+.motoboy-search button {
+  position: absolute;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--oc-ink-faint);
+}
+
+.motoboy-search button:hover {
+  background: var(--sys-color-hover-bg);
+  color: var(--oc-ink);
+}
+
+.motoboy-view-filters {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 0 18px 9px;
+  border-bottom: 1px solid var(--oc-line);
+  scrollbar-width: none;
+}
+
+.motoboy-view-filters::-webkit-scrollbar {
+  display: none;
+}
+
+.motoboy-view-filters button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 0 11px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  background: transparent;
+  color: var(--oc-ink-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.motoboy-view-filters button:hover {
+  background: var(--sys-color-hover-bg);
+  color: var(--oc-ink);
+}
+
+.motoboy-view-filters button.active {
+  border-color: color-mix(in srgb, var(--oc-accent) 18%, transparent);
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+}
+
+.motoboy-view-filters button span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 6px;
+  background: color-mix(in srgb, currentColor 9%, transparent);
+  font-size: 0.62rem;
+  font-weight: 800;
+}
+
+.motoboy-team-panel .table-container {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  border: 0;
+  border-radius: 0;
+  background: var(--oc-paper);
+  box-shadow: none;
+}
+
+.motoboy-team-panel .md-table {
+  min-width: 820px;
+}
+
+.motoboy-team-panel .table-container thead {
+  background: var(--sys-color-surface-subtle, #fbfbfe);
+}
+
+.motoboy-team-panel .table-container thead th {
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--oc-line);
+  background: var(--sys-color-surface-subtle, #fbfbfe);
+  color: var(--oc-ink-faint);
+  font-size: 0.62rem;
+  letter-spacing: 0.75px;
+}
+
+.motoboy-team-panel .md-table tbody tr td {
+  height: 64px;
+  padding: 10px 18px;
+  border-bottom: 1px solid color-mix(in srgb, var(--oc-line) 82%, transparent);
+  color: var(--oc-ink);
+}
+
+.motoboy-team-panel .md-table tbody tr:hover {
+  background: color-mix(in srgb, var(--oc-accent-bg) 42%, var(--oc-paper));
+}
+
+.motoboy-team-panel .md-table tbody tr.non-active-moto td {
+  color: var(--oc-ink);
+}
+
+.motoboy-team-panel .md-table th:first-child {
+  width: 31%;
+}
+
+.motoboy-team-panel .md-table th:last-child {
+  width: 150px;
+}
+
+.motoboy-identity {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.motoboy-identity:hover .motoboy-identity-copy > strong {
+  color: var(--oc-accent);
+}
+
+.motoboy-avatar {
+  display: block;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border: 1px solid color-mix(in srgb, var(--oc-accent) 14%, transparent);
+  border-radius: 50%;
+  background: var(--oc-accent-bg);
+  object-fit: cover;
+}
+
+.non-active-moto .motoboy-avatar {
+  border-color: var(--oc-line);
+  background: var(--sys-color-surface-subtle, #fbfbfe);
+  opacity: 0.72;
+}
+
+/* Linha do WhatsApp fica junto do status pra não crescer a altura da linha. */
+.motoboy-zap-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding-left: 7px;
+  border-left: 1px solid var(--oc-line);
+  margin-left: 3px;
+  color: var(--oc-ink-faint);
+  font-size: 0.66rem;
+  font-style: normal;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.motoboy-identity-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.motoboy-identity-copy > strong {
+  overflow: hidden;
+  color: var(--oc-ink);
+  font-size: 0.83rem;
+  font-weight: 720;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.motoboy-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--oc-ink-faint);
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+.motoboy-status > span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--oc-line);
+}
+
+.motoboy-status.active {
+  color: var(--oc-ok-ink);
+}
+
+.motoboy-status.active > span {
+  background: var(--oc-ok);
+}
+
+/* ============================
+   ✏️ Modal: editar cadastro
+   ModalBase é portal pra <body>, então os tokens --oc-* (que vivem em
+   .motoboy-dashboard) NÃO chegam aqui — daqui pra baixo é --sys-color-*,
+   igual fazem os outros modais deste arquivo.
+============================ */
+.motoboy-editar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.motoboy-editar-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* O badge fica na diagonal superior direita da foto; o wrapper existe só pra
+   dar o referencial de posicionamento sem esticar até a largura do modal. */
+.motoboy-editar-avatar-alvo {
+  position: relative;
+  line-height: 0;
+}
+
+.motoboy-editar-avatar img {
+  width: 112px;
+  height: 112px;
+  border: 1px solid var(--sys-color-line);
+  border-radius: 50%;
+  background: var(--sys-color-accent-soft);
+}
+
+.motoboy-editar-avatar-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 2px solid var(--modal-canvas);
+  border-radius: 50%;
+  background: var(--sys-color-accent);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.motoboy-editar-avatar-badge:hover {
+  transform: scale(1.08);
+}
+
+/* muted e não faint: no escuro, faint dava contraste 4.0 contra o fundo do
+   modal — e esta linha é o que ensina que o lápis abre o editor. */
+.motoboy-editar-avatar-dica {
+  color: var(--sys-color-text-muted);
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motoboy-editar-avatar-badge {
+    transition: none;
+  }
+}
+
+/* ─── Editor do avatar (modal próprio) ─── */
+
+.avatar-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Gruda no topo da rolagem do .modal-content: o desenho tem que continuar
+   visível enquanto a pessoa mexe nos traços lá embaixo. */
+.avatar-editor-palco {
+  position: sticky;
+  top: -22px; /* anula o padding-top do .modal-content */
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: -22px -22px 0;
+  padding: 22px;
+  background: var(--modal-canvas);
+  box-shadow: 0 1px 0 var(--sys-color-line);
+}
+
+.avatar-editor-palco img {
+  flex: 0 0 128px;
+  width: 128px;
+  height: 128px;
+  border: 1px solid var(--sys-color-line);
+  border-radius: 50%;
+  background: var(--sys-color-accent-soft);
+}
+
+.avatar-editor-palco-acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.motoboy-editar-avatar-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.motoboy-editar-sortear {
+  padding: 6px 14px;
+  border: 1px solid var(--sys-color-line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sys-color-text-muted);
+  font-size: 0.7rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.motoboy-editar-sortear:hover:not(:disabled) {
+  border-color: var(--sys-color-accent);
+  color: var(--sys-color-accent);
+}
+
+.motoboy-editar-sortear:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* ─── Fundo e traços ─── */
+
+.motoboy-editar-fundos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.motoboy-editar-fundo {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 2px solid var(--sys-color-line);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.motoboy-editar-fundo.is-active {
+  border-color: var(--sys-color-accent);
+  box-shadow: 0 0 0 2px var(--sys-color-accent-soft);
+}
+
+/* Sem rolagem própria de propósito: quem rola é o .modal-content. Duas barras
+   aninhadas (uma pro modal, outra pra lista) confundem — ainda mais porque o
+   estilo mais rico tem 21 traços. O "Salvar" abaixo fica grudado no rodapé
+   justamente pra a lista poder crescer sem esconder o botão. */
+.motoboy-editar-tracos {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* O botão não pode ficar 400px abaixo da dobra por causa da lista de traços. */
+.motoboy-editar .modal-buttons,
+.avatar-editor .modal-buttons {
+  position: sticky;
+  bottom: -22px; /* anula o padding-bottom do .modal-content */
+  z-index: 1;
+  margin-top: 2px;
+  padding: 12px 0 22px;
+  background: var(--modal-canvas);
+  box-shadow: 0 -1px 0 var(--sys-color-line);
+}
+
+.motoboy-traco {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 38px;
+  padding: 4px 2px;
+  border-bottom: 1px solid var(--sys-color-line);
+}
+
+.motoboy-traco:last-child {
+  border-bottom: 0;
+}
+
+.motoboy-traco-nome {
+  color: var(--sys-color-text-muted);
+  font-size: 0.76rem;
+  font-weight: 650;
+}
+
+.motoboy-traco-girar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.motoboy-traco-girar button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--sys-color-line);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--sys-color-text-muted);
+  cursor: pointer;
+}
+
+.motoboy-traco-girar button:hover {
+  border-color: var(--sys-color-accent);
+  color: var(--sys-color-accent);
+}
+
+/* text-muted e não faint: é o único retorno de onde você está na lista
+   enquanto gira as setas — no escuro, faint dava contraste 4.0 contra o
+   fundo do modal, abaixo do mínimo legível. */
+.motoboy-traco-valor {
+  min-width: 66px;
+  color: var(--sys-color-text-muted);
+  font-size: 0.68rem;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.motoboy-traco-cores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  justify-content: flex-end;
+  max-width: 62%;
+}
+
+.motoboy-traco-cor {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 2px solid var(--sys-color-line);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.motoboy-traco-cor.is-active {
+  border-color: var(--sys-color-accent);
+  box-shadow: 0 0 0 2px var(--sys-color-accent-soft);
+}
+
+/* ─── Campo de WhatsApp ───
+   O wrapper é que desenha a "caixa"; o input por dentro fica transparente.
+   Assim o ícone e o +55 ficam DENTRO do campo e alinhados sozinhos, sem
+   posicionamento absoluto e sem padding calculado na mão. */
+/* padding/raio/altura copiados do input de texto padrão do modal (12px 16px,
+   raio 12px), pra este campo não destoar do "Nome" logo acima. */
+.campo-zap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  border: 1px solid var(--modal-line);
+  border-radius: 12px;
+  background: var(--modal-card);
+  box-shadow: 0 1px 2px rgba(25, 28, 66, 0.03);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.campo-zap:focus-within {
+  border-color: var(--modal-10);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--modal-10) 12%, transparent);
+}
+
+.campo-zap.tem-erro {
+  border-color: color-mix(in srgb, var(--sys-color-danger) 55%, var(--modal-line));
+}
+
+.campo-zap.tem-erro:focus-within {
+  border-color: var(--sys-color-danger);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--sys-color-danger) 14%, transparent);
+}
+
+.campo-zap-icone {
+  flex: 0 0 auto;
+  color: #25d366; /* verde do WhatsApp: identifica o campo de relance */
+}
+
+.campo-zap-ddi {
+  flex: 0 0 auto;
+  padding-right: 8px;
+  border-right: 1px solid var(--modal-line);
+  color: var(--modal-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Vence o :where() genérico de input do ModalBase (0,2,0) porque este
+   seletor tem uma classe a mais. */
+.motoboy-editar .campo-zap input[type="tel"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 12px 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: var(--modal-ink);
+  font-size: 0.95rem;
+  font-weight: 600;
+  /* tabular-nums: sem isto os dígitos mudam de largura e o texto "anda"
+     sozinho enquanto a máscara é aplicada. */
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3px;
+}
+
+.motoboy-editar .campo-zap input[type="tel"]:focus {
+  border: 0;
+  box-shadow: none;
+  outline: none;
+}
+
+.campo-zap-ok {
+  flex: 0 0 auto;
+  color: var(--sys-color-success, #06a77d);
+}
+
+/* Altura fixa mesmo vazio: sem isto o modal pulava a cada dígito. */
+.campo-zap-aviso {
+  min-height: 15px;
+  margin-top: 5px;
+  color: var(--sys-color-danger);
+  font-size: 0.66rem;
+  font-weight: 600;
+  line-height: 15px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .campo-zap {
+    transition: none;
+  }
+}
+
+.motoboy-editar .label-optional {
+  color: var(--sys-color-text-faint);
+  font-weight: 500;
+}
+
+.motoboy-team-panel .is-fixed {
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-width: 1px;
+  border-radius: 8px;
+  font-size: 0.68rem;
+}
+
+.motoboy-team-panel .is-fixed span {
+  order: 0;
+  font-size: 0.42rem;
+}
+
+.motoboy-number-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.motoboy-number-cell strong {
+  color: var(--oc-ink);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.motoboy-number-cell small {
+  color: var(--oc-ink-faint);
+  font-size: 0.62rem;
+  font-weight: 600;
+}
+
+.motoboy-money-cell {
+  color: var(--oc-ink);
+  font-size: 0.82rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.motoboy-team-panel .extras-button {
+  width: auto;
+  height: 30px;
+  gap: 6px;
+  padding: 0 9px;
+  border: 1px solid color-mix(in srgb, var(--oc-warn-dot) 25%, transparent);
+  border-radius: 8px;
+  color: var(--oc-warn);
+  font-size: 0.66rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.motoboy-team-panel .extras-button svg {
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
+
+.motoboy-no-pending {
+  color: var(--oc-ink-faint);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.motoboy-row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.motoboy-history-button,
+.motoboy-team-panel .trash-button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--oc-ink-faint);
+}
+
+.motoboy-history-button:hover {
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+}
+
+.motoboy-team-panel .pay-button {
+  min-height: 32px;
+  padding: 0 11px;
+  border-width: 1px;
+  border-radius: 8px;
+  background: var(--oc-ok-bg);
+  font-size: 0.7rem;
+}
+
+.motoboy-team-panel .pay-button:hover {
+  box-shadow: none;
+}
+
+.motoboy-empty-row td {
+  height: 210px !important;
+}
+
+.motoboy-empty-row td > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  color: var(--oc-ink-faint);
+  text-align: center;
+}
+
+.motoboy-empty-row strong {
+  color: var(--oc-ink-soft);
+  font-size: 0.82rem;
+}
+
+.motoboy-empty-row span {
+  font-size: 0.72rem;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.motoboy-dashboard button:focus-visible {
+  outline: 2px solid var(--oc-accent);
+  outline-offset: 2px;
+}
+
+/* Fechamento explícito, alinhado às ações do resumo. */
+.motoboy-overview-actions .closure-panel {
+  right: 0;
+  left: auto;
+  width: min(360px, calc(100vw - 40px));
+  transform-origin: top right;
+}
+
+.closure-panel header {
+  gap: 16px;
+}
+
+.closure-panel header > div {
+  min-width: 0;
+}
+
+.closure-panel header p {
+  margin: 3px 0 0;
+  color: var(--oc-ink-faint);
+  font-size: 0.68rem;
+  line-height: 1.35;
+}
+
+@media (max-width: 900px) {
+  .motoboy-overview-actions {
+    width: 100%;
+  }
+
+  .motoboy-overview-actions .closure-panel {
+    right: 0;
+  }
+}
+
+@media (max-width: 820px) {
+  .motoboy-overview {
+    align-items: stretch;
+  }
+
+  .motoboy-metrics {
+    order: 3;
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+    border-top: 1px solid var(--oc-line);
+    padding-top: 14px;
+  }
+
+  .motoboy-metric {
+    flex: 1;
+  }
+
+  .motoboy-team-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .motoboy-search {
+    width: 100%;
+  }
+
+  .motoboy-team-panel .md-table {
+    min-width: 760px;
+  }
+
+  .motoboy-team-panel .md-table th:nth-child(4),
+  .motoboy-team-panel .md-table td:nth-child(4),
+  .motoboy-team-panel .md-table th:nth-child(6),
+  .motoboy-team-panel .md-table td:nth-child(6) {
+    display: table-cell;
+  }
+}
+
+@media (max-width: 560px) {
+  .motoboy-overview {
+    padding: 16px;
+  }
+
+  .motoboy-overview-actions {
+    justify-content: stretch;
+  }
+
+  .motoboy-overview-actions > * {
+    flex: 1;
+  }
+
+  .motoboy-overview-actions .icon-button,
+  .motoboy-overview-actions .icon-container,
+  .motoboy-add-button {
+    width: 100%;
+  }
+
+  .motoboy-metrics {
+    flex-wrap: wrap;
+  }
+
+  .motoboy-metric {
+    min-width: 50%;
+    padding: 7px 10px;
+  }
+
+  .motoboy-metric:nth-child(3) {
+    border-left: 0;
+  }
+
+  .motoboy-view-filters {
+    padding-inline: 14px;
+  }
+}
+
+/* Conteúdo específico do histórico; o contêiner vem do ModalBase. */
+.history-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+}
+
+.history-section-heading > div,
+.history-extra-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.history-section-heading strong,
+.history-extra-copy strong {
+  color: var(--oc-ink);
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.history-section-heading span,
+.history-extra-copy span {
+  color: var(--oc-ink-faint);
+  font-size: 0.66rem;
+  line-height: 1.35;
+}
+
+.history-section-heading > span {
+  padding: 4px 8px;
+  border-radius: 7px;
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.history-extra-copy {
+  text-align: left;
+}
+
+.order-history-list {
+  max-height: 360px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.order-history-row {
+  padding: 11px 9px;
+  border-radius: 9px;
+}
+
+.order-history-index {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  flex: 0 0 26px;
+  border-radius: 8px;
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+  font-weight: 800;
+  text-align: center;
+}
+
+.order-history-time {
+  padding: 4px 7px;
+  border-radius: 6px;
+  background: var(--sys-color-surface-subtle, #fbfbfe);
+}
+
+.options-orders-modal {
+  display: grid;
+  grid-template-columns: minmax(160px, 0.7fr) minmax(240px, 1.3fr);
+  align-items: center;
+  gap: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--oc-line);
+  border-radius: 13px;
+  background: var(--sys-color-surface-subtle, #fbfbfe);
+}
+
+@media (max-width: 666px) {
+  .history-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .history-date-nav {
+    justify-content: center;
+  }
+
+  .history-summary {
+    justify-content: center;
+    padding-top: 10px;
+    padding-left: 0;
+    border-top: 1px solid var(--oc-line);
+    border-left: 0;
+  }
+
+  .options-orders-modal {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Hierarquia tipográfica: só nomes e totais principais usam tinta forte. */
+.motoboy-overview-kicker,
+.motoboy-metric small,
+.motoboy-view-filters button,
+.closure-panel header h2,
+.primary-btn,
+.secondary-btn,
+.add-order-step-copy strong {
+  font-weight: 600;
+}
+
+.motoboy-overview-copy h2,
+.motoboy-team-title h2 {
+  font-weight: 650;
+}
+
+.motoboy-metric strong,
+.motoboy-team-count,
+.motoboy-view-filters button span {
+  font-weight: 680;
+}
+
+.motoboy-add-button,
+.icon-container {
+  font-weight: 650;
+}
+
+.motoboy-team-panel .md-table tbody tr td,
+.motoboy-team-panel .md-table tbody tr.non-active-moto td {
+  color: var(--oc-ink-soft);
+}
+
+.motoboy-identity-copy > strong {
+  color: color-mix(in srgb, var(--oc-ink) 88%, var(--oc-ink-soft));
+  font-weight: 650;
+}
+
+.motoboy-number-cell strong {
+  color: var(--oc-ink-soft);
+  font-weight: 650;
+}
+
+.motoboy-money-cell,
+.summary-value,
+.order-history-value,
+.money-info strong {
+  font-weight: 700;
+}
+
+.motoboy-team-panel .extras-button,
+.motoboy-team-panel .pay-button,
+.history-section-heading strong,
+.history-extra-copy strong {
+  font-weight: 650;
+}
+
+.motoboy-history-modal .history-toolbar {
+  border-color: color-mix(in srgb, var(--oc-accent) 10%, var(--oc-line));
+  background: color-mix(in srgb, var(--oc-paper) 82%, var(--oc-accent-bg));
+  box-shadow: 0 5px 16px rgba(28, 29, 66, 0.05);
+}
+
+.motoboy-history-modal .date-nav-btn {
+  color: var(--oc-ink-faint);
+}
+
+.motoboy-history-modal .date-display-btn {
+  border-color: transparent;
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+  font-weight: 650;
+}
+
+.motoboy-history-modal .date-display-btn:hover {
+  border-color: color-mix(in srgb, var(--oc-accent) 22%, transparent);
+  background: color-mix(in srgb, var(--oc-accent-bg) 78%, var(--oc-paper));
+}
+
+.motoboy-history-modal .history-summary {
+  gap: 8px;
+}
+
+.motoboy-history-modal .summary-item {
+  min-width: 78px;
+  padding: 6px 9px;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--oc-paper) 70%, transparent);
+}
+
+.motoboy-history-modal .summary-label {
+  color: var(--oc-ink-faint);
+  font-weight: 600;
+  letter-spacing: 0.65px;
+}
+
+.motoboy-history-modal .summary-value {
+  color: var(--oc-ink-soft);
+}
+
+.motoboy-history-modal .summary-value.highlight {
+  color: var(--oc-ok-ink);
+}
+
+.motoboy-history-modal .summary-divider {
+  display: none;
+}
+
+.motoboy-history-modal .history-section-heading strong {
+  color: var(--oc-ink-soft);
+}
+
+.motoboy-history-modal .order-history-list {
+  gap: 6px;
+  padding: 2px;
+}
+
+.motoboy-history-modal .order-history-row {
+  border: 1px solid color-mix(in srgb, var(--oc-line) 82%, transparent);
+  background: color-mix(in srgb, var(--oc-paper) 88%, var(--sys-color-surface-subtle, #fbfbfe));
+  box-shadow: 0 2px 8px rgba(28, 29, 66, 0.025);
+}
+
+.motoboy-history-modal .order-history-row:hover {
+  border-color: color-mix(in srgb, var(--oc-accent) 16%, var(--oc-line));
+  background: color-mix(in srgb, var(--oc-accent-bg) 30%, var(--oc-paper));
+}
+
+.motoboy-history-modal .order-history-name {
+  color: var(--oc-ink-soft);
+  font-weight: 650;
+}
+
+.motoboy-history-modal .order-history-index {
+  background: color-mix(in srgb, var(--oc-accent-bg) 82%, var(--oc-paper));
+}
+
+.motoboy-history-modal .order-history-time {
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+}
+
+.motoboy-history-modal .order-history-value {
+  color: var(--oc-ok-ink);
+}
+
+.motoboy-history-modal .order-history-empty {
+  border-color: color-mix(in srgb, var(--oc-accent) 16%, var(--oc-line));
+  background: color-mix(in srgb, var(--oc-paper) 72%, transparent);
+}
+
+.motoboy-history-modal .options-orders-modal {
+  border-color: color-mix(in srgb, var(--oc-accent) 14%, var(--oc-line));
+  background: color-mix(in srgb, var(--oc-accent-bg) 56%, var(--oc-paper));
+}
+
+.motoboy-history-modal .history-extra-copy strong {
+  color: var(--oc-ink-soft);
+}
+
+/* O conteúdo do histórico consome a paleta 60/30/10 do ModalBase. */
+.motoboy-history-modal .history-toolbar,
+.motoboy-history-modal .options-orders-modal {
+  border-color: var(--modal-line);
+  background: var(--modal-30);
+  box-shadow: none;
+}
+
+.motoboy-history-modal .summary-item,
+.motoboy-history-modal .order-history-row,
+.motoboy-history-modal .order-history-empty {
+  border-color: var(--modal-line);
+  background: var(--modal-card);
+}
+
+.motoboy-history-modal .history-section-heading strong,
+.motoboy-history-modal .history-extra-copy strong,
+.motoboy-history-modal .order-history-name,
+.motoboy-history-modal .summary-value {
+  color: var(--modal-ink);
+}
+
+.motoboy-history-modal .history-section-heading span,
+.motoboy-history-modal .history-extra-copy span,
+.motoboy-history-modal .summary-label,
+.motoboy-history-modal .order-history-id {
+  color: var(--modal-muted);
+}
+
+.motoboy-history-modal .date-display-btn,
+.motoboy-history-modal .order-history-time,
+.motoboy-history-modal .order-history-index,
+.motoboy-history-modal .history-section-heading > span {
+  background: color-mix(in srgb, var(--modal-10) 11%, var(--modal-card));
+  color: var(--modal-10);
+}
+
+.motoboy-history-modal .order-history-row:hover {
+  border-color: color-mix(in srgb, var(--modal-10) 24%, var(--modal-line));
+  background: color-mix(in srgb, var(--modal-10) 5%, var(--modal-card));
+}
+
+/* O histórico vive em um portal; recompõe os aliases locais a partir do
+   ModalBase para calendário e demais controles nunca ficarem transparentes. */
+.motoboy-history-modal {
+  --oc-ink: var(--modal-ink);
+  --oc-ink-soft: var(--modal-muted);
+  --oc-ink-faint: color-mix(in srgb, var(--modal-muted) 72%, transparent);
+  --oc-accent: var(--modal-10);
+  --oc-accent-bg: color-mix(in srgb, var(--modal-10) 11%, var(--modal-card));
+  --oc-line: var(--modal-line);
+  --oc-perf: var(--modal-line);
+  --oc-paper: var(--modal-card);
+  --oc-ok-ink: var(--sys-color-success-ink, #04815f);
+}
+
+.motoboy-history-modal .history-calendar-popover {
+  top: calc(100% + 9px);
+  left: 0;
+  z-index: 200;
+  padding: 8px;
+  border: 1px solid var(--modal-line);
+  border-radius: 14px;
+  background: var(--modal-card);
+  box-shadow:
+    0 8px 20px rgba(22, 24, 56, 0.1),
+    0 22px 48px rgba(22, 24, 56, 0.18);
+  transform: none;
+  isolation: isolate;
+}
+
+.motoboy-history-modal .history-calendar-popover .react-datepicker,
+.motoboy-history-modal .history-calendar-popover .react-datepicker__month-container {
+  border: 0;
+  background: var(--modal-card);
+  color: var(--modal-ink);
+}
+
+.motoboy-history-modal .history-calendar-popover .react-datepicker__header {
+  margin-bottom: 4px;
+  padding: 10px 4px 7px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--modal-30);
+}
+
+.motoboy-history-modal .history-calendar-popover .react-datepicker__current-month {
+  color: var(--modal-ink) !important;
+  font-weight: 650;
+}
+
+.motoboy-history-modal .history-calendar-popover .react-datepicker__day-name {
+  color: var(--modal-muted);
+  font-weight: 600;
+}
+
+.motoboy-history-modal .history-calendar-popover .react-datepicker__day {
+  color: var(--modal-ink);
+}
+
+.motoboy-history-modal .history-calendar-popover .react-datepicker__day:hover {
+  background: color-mix(in srgb, var(--modal-10) 10%, var(--modal-card));
+  color: var(--modal-10);
+}
+
+.motoboy-history-modal .history-calendar-popover .react-datepicker__day--outside-month {
+  color: color-mix(in srgb, var(--modal-muted) 42%, transparent);
+}
+
+.motoboy-history-modal .history-calendar-popover .react-datepicker__day--today {
+  color: var(--modal-10);
+  font-weight: 700;
+}
+
+.motoboy-history-modal .history-calendar-popover .react-datepicker__day--selected,
+.motoboy-history-modal .history-calendar-popover .react-datepicker__day--keyboard-selected {
+  background: var(--modal-10);
+  color: #ffffff;
+}
+
+.motoboy-history-modal .history-calendar-popover .react-datepicker__navigation-icon::before {
+  border-color: var(--modal-muted);
+}

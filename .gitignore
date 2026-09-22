@@ -1,0 +1,48 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Segredos locais — nunca commitar
+.env
+.env.*
+functions/.env
+functions/.env.*
+
+# Chaves e contas de serviço — nunca versionar, mesmo fora de .env
+*.pem
+*.key
+*.p12
+*.pfx
+*firebase-adminsdk*.json
+*service-account*.json
+*service_account*.json
+
+# Cópias de trabalho e caches locais — não fazem parte da aplicação publicada
+.tmp-*
+.ja-pizza-stage/
+.claude/
+.codex-temp/
+.firebase/
+.pnpm-store/
+functions-backup-antigo/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

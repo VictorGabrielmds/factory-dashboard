@@ -1,0 +1,413 @@
+/* ModalBase — estrutura visual compartilhada por todos os diálogos do sistema. */
+
+.modal-base {
+  /* 60 / 30 / 10:
+     60% base cinza-clara, 30% azul-acinzentado, 10% índigo de ação. */
+  --modal-60: #f3f4f8;
+  --modal-30: #e4e7f1;
+  --modal-10: #36439a;
+  --modal-card: #fbfbfd;
+  --modal-ink: #333644;
+  --modal-muted: #73778a;
+  --modal-line: #d6d9e5;
+  --modal-surface: var(--modal-card);
+  --modal-canvas: var(--modal-60);
+  --modal-header: var(--modal-30);
+  --modal-shadow: rgba(20, 22, 56, 0.22);
+
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  padding: 24px;
+  background: rgba(24, 25, 49, 0.46);
+  backdrop-filter: blur(10px) saturate(0.82);
+  -webkit-backdrop-filter: blur(10px) saturate(0.82);
+  animation: modal-overlay-in 0.18s ease-out;
+}
+
+:root[data-theme="dark"] .modal-base {
+  --modal-60: #1b1e29;
+  --modal-30: #272b3b;
+  --modal-10: #7d84ee;
+  --modal-card: #222632;
+  --modal-ink: #eceef8;
+  --modal-muted: #a9adbf;
+  --modal-line: #383d50;
+  --modal-shadow: rgba(0, 0, 0, 0.46);
+}
+
+@keyframes modal-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 560px);
+  max-height: min(88vh, 88dvh);
+  overflow: hidden;
+  border: 1px solid var(--modal-line);
+  border-radius: 20px;
+  background: var(--modal-canvas);
+  box-shadow:
+    0 2px 8px rgba(20, 22, 56, 0.08),
+    0 28px 72px var(--modal-shadow);
+  color: var(--modal-muted);
+  animation: modal-dialog-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.modal-container--sm {
+  max-width: 440px;
+}
+
+.modal-container--md {
+  max-width: 560px;
+}
+
+.modal-container--lg {
+  max-width: 760px;
+}
+
+@keyframes modal-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 64px;
+  margin: 0;
+  padding: 15px 18px 14px 20px;
+  border-bottom: 1px solid var(--modal-line);
+  background: var(--modal-header);
+  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--modal-card) 42%, transparent);
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+
+.modal-title-mark {
+  width: 4px;
+  height: 20px;
+  flex: 0 0 4px;
+  border-radius: 999px;
+  background: var(--modal-10);
+}
+
+.modal-header h2 {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  color: var(--modal-ink) !important;
+  font-size: 1.05rem !important;
+  font-weight: 650;
+  letter-spacing: -0.018em;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.modal-header .close-btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--modal-line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--modal-card) 72%, transparent);
+  color: var(--modal-muted);
+  cursor: pointer;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.modal-header .close-btn:hover {
+  border-color: color-mix(in srgb, var(--modal-10) 28%, var(--modal-line));
+  background: var(--modal-card);
+  color: var(--modal-10);
+  transform: translateY(-1px);
+}
+
+.modal-header .close-btn:focus-visible {
+  outline: 2px solid var(--modal-10);
+  outline-offset: 2px;
+}
+
+.modal-container .modal-content {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 22px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--modal-canvas);
+  color: var(--modal-muted);
+  text-align: left;
+  scrollbar-color: var(--modal-line) transparent;
+  scrollbar-width: thin;
+}
+
+.modal-container .modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-container .modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-container .modal-content::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--modal-line);
+  background-clip: padding-box;
+}
+
+.modal-container .modal-content > p {
+  margin: 0;
+  color: var(--modal-muted);
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.modal-container .modal-content > p strong {
+  color: var(--modal-ink);
+  font-weight: 650;
+}
+
+.modal-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-container .modal-content label {
+  color: var(--modal-muted);
+}
+
+.modal-container .modal-content
+  :where(
+    input[type="text"],
+    input[type="number"],
+    input[type="search"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="time"],
+    select,
+    textarea
+  ) {
+  border-color: var(--modal-line);
+  background: var(--modal-card);
+  color: var(--modal-ink);
+  box-shadow: 0 1px 2px rgba(25, 28, 66, 0.03);
+}
+
+.modal-container .modal-content
+  :where(
+    input[type="text"],
+    input[type="number"],
+    input[type="search"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="time"],
+    select,
+    textarea
+  )::placeholder {
+  color: color-mix(in srgb, var(--modal-muted) 72%, transparent);
+}
+
+.modal-container .modal-content
+  :where(
+    input[type="text"],
+    input[type="number"],
+    input[type="search"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    input[type="time"],
+    select,
+    textarea
+  ):focus {
+  border-color: var(--modal-10);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--modal-10) 12%, transparent);
+  outline: none;
+}
+
+.modal-container button.primary,
+.modal-container button.btn-primary {
+  border-color: var(--modal-10);
+  background: var(--modal-10);
+  color: #ffffff;
+}
+
+.modal-container button.secondary,
+.modal-container button.btn-secondary {
+  border-color: color-mix(in srgb, var(--modal-10) 25%, var(--modal-line));
+  background: var(--modal-card);
+  color: var(--modal-10);
+}
+
+/* Checkbox compartilhado. */
+.custom-checkbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  margin-bottom: 8px;
+  padding-left: 30px;
+  color: var(--modal-muted);
+  font-size: 0.86rem;
+  font-weight: 550;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-checkbox input[type="checkbox"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.custom-checkbox .checkmark {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 19px;
+  height: 19px;
+  border: 1.5px solid var(--modal-line);
+  border-radius: 6px;
+  background: var(--modal-surface);
+  transform: translateY(-50%);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.custom-checkbox:hover .checkmark {
+  border-color: var(--modal-10);
+}
+
+.custom-checkbox input:checked ~ .checkmark {
+  border-color: var(--modal-10);
+  background: var(--modal-10);
+}
+
+.custom-checkbox input:focus-visible ~ .checkmark {
+  outline: 2px solid var(--modal-10);
+  outline-offset: 2px;
+}
+
+.custom-checkbox .checkmark::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 6px;
+  display: none;
+  width: 4px;
+  height: 9px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.custom-checkbox input:checked ~ .checkmark::after {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-base,
+  .modal-container {
+    animation: none;
+  }
+
+  .modal-header .close-btn {
+    transition: none;
+  }
+}
+
+/* No celular, o mesmo componente assume comportamento de bottom sheet. */
+@media (max-width: 666px) {
+  .modal-base {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal-container,
+  .modal-container--sm,
+  .modal-container--md,
+  .modal-container--lg {
+    width: 100%;
+    max-width: none;
+    max-height: min(90vh, 90dvh);
+    border-right: 0;
+    border-bottom: 0;
+    border-left: 0;
+    border-radius: 20px 20px 0 0;
+    animation: modal-sheet-in 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .modal-container::before {
+    content: "";
+    display: block;
+    width: 38px;
+    height: 4px;
+    margin: 9px auto 0;
+    flex: 0 0 4px;
+    border-radius: 999px;
+    background: var(--modal-line);
+  }
+
+  .modal-header {
+    min-height: 60px;
+    padding: 12px 16px 14px 20px;
+  }
+
+  .modal-header .close-btn {
+    width: 40px;
+    height: 40px;
+    flex-basis: 40px;
+  }
+
+  .modal-container .modal-content {
+    padding: 18px 20px calc(20px + var(--safe-bottom, 0px));
+  }
+}
+
+@keyframes modal-sheet-in {
+  from {
+    opacity: 0.5;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

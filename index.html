@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/icons/icon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- PWA / "app instalado" — o script abaixo já ajusta a cor pro tema certo -->
+    <meta id="theme-color-meta" name="theme-color" content="#F4F5F9" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Salgados" />
+    <link rel="apple-touch-icon" href="/icons/icon.svg" />
+
+    <title>Dashboard - Fabrica dos Salgados</title>
+    <script>
+      (function () {
+        try {
+          var salvo = localStorage.getItem("fs-theme");
+          var tema = salvo === "dark" || salvo === "light"
+            ? salvo
+            : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          document.documentElement.setAttribute("data-theme", tema);
+          var meta = document.getElementById("theme-color-meta");
+          if (meta) meta.setAttribute("content", tema === "dark" ? "#0F1017" : "#F4F5F9");
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
