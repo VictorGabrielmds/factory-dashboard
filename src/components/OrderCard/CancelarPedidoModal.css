@@ -1,0 +1,61 @@
+.cp-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.cp-pergunta {
+  font-size: 0.95rem;
+  color: var(--sys-color-text-main);
+  margin: 0;
+}
+
+.cp-aviso {
+  font-size: 0.82rem;
+  color: var(--sys-color-text-muted);
+  margin: 0;
+}
+
+.cp-aviso-pix {
+  font-size: 0.82rem;
+  color: var(--sys-color-danger);
+  background: var(--sys-color-danger-soft);
+  border: 1px solid var(--sys-color-danger);
+  border-radius: 8px;
+  padding: 0.6rem 0.75rem;
+  line-height: 1.4;
+}
+
+.cp-acoes {
+  display: flex;
+  gap: 0.6rem;
+  justify-content: flex-end;
+  padding-top: 0.4rem;
+}
+
+.cp-btn-voltar,
+.cp-btn-confirmar {
+  padding: 0.6rem 1.25rem;
+  border-radius: 9px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.cp-btn-voltar {
+  border: 1.5px solid var(--sys-color-line-strong);
+  background: none;
+  color: var(--sys-color-text-main);
+}
+
+.cp-btn-confirmar {
+  border: none;
+  background: var(--sys-color-danger);
+  color: #fff;
+}
+
+.cp-btn-confirmar:disabled,
+.cp-btn-voltar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

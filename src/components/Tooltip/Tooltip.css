@@ -1,0 +1,83 @@
+/* ═══════════════════════════════════════════════════════════════
+   Tooltip — a etiqueta do sistema
+   Tinta escura da casa, seta apontando para o alvo. O balão é
+   renderizado num portal (document.body) e posicionado via JS
+   relativo à VIEWPORT — assim ele nunca é cortado por overflow/
+   scroll de containers pais (cards, listas) e nunca disputa
+   espaço com o conteúdo do próprio card, não importa onde o
+   alvo esteja posicionado nele.
+   Suporta múltiplas linhas (\n vira quebra de verdade — os itens
+   "fora da caixa" do OrderCard dependem disso).
+   ═══════════════════════════════════════════════════════════════ */
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+/* Balão fixo à viewport — montado/desmontado pelo React no hover,
+   por isso não precisa mais de visibility/opacity para esconder;
+   só a transição de entrada. */
+.tooltip-text--fixed {
+  position: fixed;
+  width: max-content;
+  max-width: min(240px, calc(100vw - 24px));
+
+  background-color: rgba(28, 29, 38, 0.92); /* a tinta do sistema */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 6px rgba(28, 29, 38, 0.2), 0 12px 28px rgba(28, 29, 38, 0.28);
+  color: #ffffff;
+
+  text-align: left;
+  white-space: pre-line;   /* \n vira quebra de linha (listas de itens) */
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 0.76rem;
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
+
+  pointer-events: none;
+  z-index: 1000;
+  animation: tooltipFadeIn 0.16s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* A seta: um losango da mesma tinta, apontando para o alvo.
+   --top: balão abre para BAIXO do alvo, seta aponta pra cima.
+   --bottom: balão abre para CIMA do alvo, seta aponta pra baixo. */
+.tooltip-text--fixed::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  background-color: rgba(28, 29, 38, 0.92);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.tooltip-text--fixed.tooltip-text--top::after {
+  top: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tooltip-text--fixed.tooltip-text--bottom::after {
+  top: 100%;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip-text--fixed {
+    animation: none;
+  }
+}

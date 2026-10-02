@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "entregas-781a8"
+  },
+  "targets": {
+    "entregas-781a8": {
+      "hosting": {
+        "painel": [
+          "entregas-781a8-painel"
+        ],
+        "app-cliente": [
+          "entregas-781a8-cliente"
+        ]
+      }
+    }
+  }
+}

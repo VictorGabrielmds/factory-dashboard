@@ -1,0 +1,259 @@
+rules_version = '2';
+
+// ============================================================================
+// REGRAS DO FIRESTORE
+// O Admin SDK (Cloud Functions) IGNORA estas regras — elas valem apenas para
+// quem acessa com o SDK cliente: o painel (Firebase Auth por e-mail/senha) e,
+// no futuro, o app cliente (Firebase Auth por custom token, ver
+// functions/src/cliente/authWhatsApp.js).
+//
+// Modelo do painel: precisa estar logado no Firebase Auth (usuário criado no
+// console → Authentication → Add user). Auditoria completa do que o
+// frontend (src/) realmente lê/escreve em cada coleção — feita depois que a
+// versão anterior deste arquivo (herdada de uma cópia esquecida em
+// functions/firestore.rules, nunca atualizada) se mostrou desatualizada em
+// produção: negava write em conversas/configuracoes/pedidos que o painel usa
+// de verdade, e nem citava motoboys/rotas/sistema/frituras.
+// ============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // "logado()" significa "é a equipe do painel", não só "tem uma sessão
+    // do Firebase Auth" — desde que o app cliente também autentica clientes
+    // reais (login por WhatsApp, custom token), request.auth != null sozinho
+    // deixaria qualquer cliente logado ler/escrever pedidos de todo mundo,
+    // o chat de suporte inteiro, cadastro de motoboys etc. Confirmar que é
+    // staff exige um documento em staff/{uid} (criado manualmente no
+    // Console, um por operador — ver README/instruções de deploy).
+    function logado() {
+      return request.auth != null &&
+        (
+          exists(/databases/$(database)/documents/staff/$(request.auth.uid))
+            ? (
+              !("ativo" in get(/databases/$(database)/documents/staff/$(request.auth.uid)).data) ||
+              get(/databases/$(database)/documents/staff/$(request.auth.uid)).data.ativo != false
+            )
+            : false
+        );
+    }
+
+    // Um pedido cancelado é um registro terminal no fluxo do cliente. A
+    // alteração para status 4 acontece exclusivamente pela Cloud Function
+    // transacional e auditada; depois dela, o navegador também não pode
+    // alterar o pedido nem "ressuscitá-lo" com outro status.
+    //
+    // Alguns pedidos legados ainda não têm o campo status. Considerá-los como
+    // não cancelados preserva a operação enquanto eles seguem sendo migrados.
+    function naoCancelado(dados) {
+      return !("status" in dados) || dados.status != 4;
+    }
+
+    // Ninguém lê/escreve isto via SDK cliente — só existe pra função
+    // exists() acima enxergar. Gerenciado à mão no Console (que roda com
+    // acesso de dono do projeto, não passa por estas regras).
+    match /staff/{uid} { allow read, write: if false; }
+
+    // Pedidos: painel lê tudo, cria (pedido avulso/manual), atualiza
+    // (status, itens da cozinha, atribuição de motoboy) e apaga (limpeza de
+    // antigos). O app cliente NUNCA cria pedido direto (sempre via Cloud
+    // Function criarPedido, Admin SDK) — só pode ler o PRÓPRIO pedido, pra
+    // acompanhar confirmação de PIX em tempo real.
+    match /pedidos/{id} {
+      allow read: if logado() ||
+        (request.auth != null && resource.data.clienteUid == request.auth.uid);
+      // O único pedido criado diretamente pelo painel é o lançamento extra
+      // do motoboy. Pedidos reais do app passam pela Cloud Function. Remover
+      // a permissão genérica impede criar registros normais pelo DevTools.
+      allow create: if logado() &&
+        request.resource.data.avulso == true &&
+        request.resource.data.status == 5 &&
+        request.resource.data.order_id == id &&
+        naoCancelado(request.resource.data);
+      // Não há tela ativa que apague pedidos; histórico financeiro e
+      // operacional não pode sumir por uma chamada direta do navegador.
+      allow delete: if false;
+      // Cancelamento é financeiro/operacionalmente sensível. Desde que ele
+      // passou a ter comando transacional no backend, o SDK cliente não pode
+      // escrever `status: 4` direto, mesmo que um membro da equipe tente
+      // fazê-lo pelo DevTools. Também bloqueamos qualquer edição posterior de
+      // um cancelado: sem isso, seria possível trocá-lo de 4 para outro status
+      // e reabrir o pedido. Transições operacionais legítimas de pedidos ainda
+      // não cancelados (por exemplo 2 → 3 ou 2 → 5) continuam permitidas no
+      // fluxo legado até seus próprios comandos serem migrados.
+      allow update: if logado() &&
+        naoCancelado(resource.data) &&
+        naoCancelado(request.resource.data);
+    }
+
+    // Motoboys: CRUD completo pelo painel. A transação em OrdersList.tsx
+    // escreve pedidos + motoboys juntos — as duas coleções precisam da
+    // mesma permissão de update, senão a transação inteira falha.
+    match /motoboys/{id} {
+      allow read: if logado();
+      allow create, update, delete: if logado();
+    }
+
+    // Rotas do dia (RouteKaban): upsert por data: nenhuma tela apaga.
+    match /rotas/{dateKey} {
+      allow read: if logado();
+      allow create, update: if logado();
+      allow delete: if false;
+    }
+
+    // Heartbeat do robô de impressão: só leitura pelo painel — quem escreve
+    // é o processo físico ao lado da impressora, não este frontend.
+    match /sistema/{id} {
+      allow read: if logado();
+      allow write: if false;
+    }
+
+    // Agenda de frituras: CRUD completo pelo painel.
+    match /frituras/{id} {
+      allow read: if logado();
+      allow create, update, delete: if logado();
+    }
+
+    // Painel: leitura em tempo real das conversas e mensagens. Criação e
+    // exclusão de conversas/mensagens só acontecem via Cloud Functions
+    // (webhook do WhatsApp, API do painel) — só update é legítimo aqui
+    // (marcar como lida, pin, contador de não lidas).
+    match /conversas/{telefone} {
+      allow read: if logado();
+      allow update: if logado();
+      allow create, delete: if false;
+
+      match /mensagens/{msgId} {
+        allow read: if logado();
+        allow update: if logado();
+        allow create, delete: if false;
+      }
+    }
+
+    // Outbox: o painel CRIA itens (envio offline-first); nunca lê de terceiros
+    match /outbox/{itemId} {
+      allow create: if logado()
+        && request.resource.data.telefone is string
+        && request.resource.data.telefone.matches('^55[0-9]{10,11}$');
+      allow read: if logado();   // para exibir estado enviado/erro na UI
+      allow update, delete: if false;
+    }
+
+    match /pendencias/{id} { allow read: if logado(); allow write: if false; }
+
+    // Configurações do chat (frases/tags/figurinhas/notificações). Edição de
+    // frases/tags passa pela API do painel (Admin SDK), mas figurinhas e
+    // notificações são gravadas direto pelo cliente — mesma coleção, mesmo
+    // nível de confiança (equipe autenticada), então a regra é uma só.
+    match /configuracoes/{id} {
+      allow read: if logado();
+      allow create, update: if logado();
+      allow delete: if false;
+    }
+
+    // Cardápio: vitrine pública (sem exigir login do cliente pra ver os
+    // produtos), escrita só pelo painel autenticado.
+    match /produtos/{id} {
+      allow read: if true;
+      allow create: if (
+        (
+          id == "agendamento_fritura" &&
+          request.resource.data.keys().hasOnly([
+            "nome", "descricao", "preco", "categoria", "imagemUrl",
+            "disponivel", "esgotado", "tempoPreparoMinutos",
+            "friturasNoLocal", "dataHoraFritura", "localFritura",
+            "tipoSistema", "itemSistema"
+          ]) &&
+          request.resource.data.nome == "Agendar fritura" &&
+          request.resource.data.descricao ==
+            "Escolha uma data e envie sua solicitação de fritura para nossa equipe." &&
+          request.resource.data.preco == 0 &&
+          request.resource.data.categoria == "Serviços" &&
+          request.resource.data.imagemUrl == "" &&
+          request.resource.data.disponivel == true &&
+          request.resource.data.esgotado == false &&
+          request.resource.data.tempoPreparoMinutos == null &&
+          request.resource.data.friturasNoLocal == false &&
+          request.resource.data.dataHoraFritura == null &&
+          request.resource.data.localFritura == null &&
+          request.resource.data.tipoSistema == "agendamento_fritura" &&
+          request.resource.data.itemSistema == true
+        ) ||
+        (
+          logado() &&
+          id != "agendamento_fritura" &&
+          (!("tipoSistema" in request.resource.data) ||
+            request.resource.data.tipoSistema != "agendamento_fritura")
+        )
+      );
+      allow update: if logado() && (
+        (
+          id == "agendamento_fritura" &&
+          resource.data.tipoSistema == "agendamento_fritura" &&
+          request.resource.data.tipoSistema == "agendamento_fritura" &&
+          request.resource.data.itemSistema == true
+        ) ||
+        (
+          id != "agendamento_fritura" &&
+          (!("tipoSistema" in request.resource.data) ||
+            request.resource.data.tipoSistema != "agendamento_fritura")
+        )
+      );
+      allow delete: if logado() && id != "agendamento_fritura";
+    }
+
+    // Cupons: o app cliente NUNCA lê esta coleção direto — só a Cloud
+    // Function validarCupom (Admin SDK, ignora esta regra) valida um código
+    // e devolve tipo/valor. Ler a coleção direto listaria todos os códigos
+    // válidos pra qualquer um. Só o painel (staff autenticado) gerencia.
+    match /cupons/{codigo} {
+      allow read, write: if logado();
+    }
+
+    // Zonas de entrega (bairro → taxa): só o painel gerencia. A Cloud
+    // Function criarPedido calcula a taxa server-side via Admin SDK — o
+    // app cliente nunca lê essa tabela direto.
+    match /zonas_entrega/{id} {
+      allow read, write: if logado();
+    }
+
+    // Coleções internas do backend: ninguém de fora toca
+    match /eventos_meta/{id}      { allow read, write: if false; }
+    match /eventos_asaas/{id}     { allow read, write: if false; }
+    match /inbox_pedidos_instadelivery/{id} { allow read, write: if false; }
+    // Fila interna de avisos críticos: contém telefone, estado de entrega e
+    // correlação com a Meta. Só Cloud Functions pode ler/escrever.
+    match /notificacoes_pedido/{id} { allow read, write: if false; }
+    match /status_meta_saida/{id} { allow read, write: if false; }
+    match /_idempotency/{id}      { allow read, write: if false; }
+    match /pagamentos_asaas/{id}  { allow read, write: if false; }
+    // Pareamento e trabalhos de impressão são contratos servidor ↔ desktop.
+    // Nem staff autenticado os lê diretamente, evitando que um navegador
+    // copie códigos temporários ou altere a atribuição de uma impressora.
+    match /_pareamentos_impressao/{id} { allow read, write: if false; }
+    match /dispositivos_impressao/{id} { allow read, write: if false; }
+    match /trabalhos_impressao/{id} { allow read, write: if false; }
+
+    // Fiscal: inclusive para staff, alterações passam pela API autenticada e
+    // auditada. Não misturar estes dados com o catálogo público /produtos.
+    match /fiscal_produtos/{document=**} { allow read, write: if false; }
+      match /fiscal_conferencias/{document=**} { allow read, write: if false; }
+      match /fiscal_operacoes/{document=**} { allow read, write: if false; }
+      match /fiscal_sistema/{document=**} { allow read, write: if false; }
+
+    // login_otps é transitório e nunca deve ser lido pelo cliente — só a
+    // Cloud Function de login (Admin SDK) toca nele.
+    match /login_otps/{telefone} { allow read, write: if false; }
+
+    // Cliente pode LER o próprio perfil (pra pré-preencher nome salvo no
+    // checkout) — escrita continua só via Cloud Function (Admin SDK), nunca
+    // direto: um campo ali (cupomTentativasRecentes) é o rate-limit do
+    // cupom, e o cliente não pode conseguir resetar o próprio limite.
+    match /clientes/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    match /{document=**} { allow read, write: if false; }
+  }
+}

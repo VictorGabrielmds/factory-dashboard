@@ -1,0 +1,1570 @@
+[
+  {
+    "id": "alameda_dos_sonhos",
+    "nome": "ALAMEDA DOS SONHOS",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5627942,
+    "lng": -44.2370528,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "alemanha",
+    "nome": "ALEMANHA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5360356,
+    "lng": -44.2687864,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "alterosa",
+    "nome": "ALTEROSA",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.4954609,
+    "lng": -44.24722,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "alto_do_calhau",
+    "nome": "ALTO DO CALHAU",
+    "setor_id": "CALHAU_LITORAL",
+    "lat": -2.5004136,
+    "lng": -44.2556904,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "alto_do_pinho",
+    "nome": "ALTO DO PINHO",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.540825,
+    "lng": -44.2449331,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "alto_do_turu_i",
+    "nome": "ALTO DO TURU I",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5275822,
+    "lng": -44.230543,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "alto_esperanca",
+    "nome": "ALTO ESPERANÇA",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.5414063,
+    "lng": -44.3037122,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "angelim",
+    "nome": "ANGELIM",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.530365,
+    "lng": -44.2352841,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "anil",
+    "nome": "ANIL",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5467256,
+    "lng": -44.2385796,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "anjo_da_guarda",
+    "nome": "ANJO DA GUARDA",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.560144,
+    "lng": -44.3310859,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "apeadouro",
+    "nome": "APEADOURO",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5398364,
+    "lng": -44.2774608,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "apicum",
+    "nome": "APICUM",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5344262,
+    "lng": -44.294414,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "aracagi",
+    "nome": "ARAÇAGI",
+    "setor_id": "ARACAGI_EXTERNO",
+    "lat": -2.4778661,
+    "lng": -44.2113732,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "areinha",
+    "nome": "AREINHA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5457493,
+    "lng": -44.2925512,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "aurora",
+    "nome": "AURORA",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5495663,
+    "lng": -44.2293964,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "bacanga",
+    "nome": "BACANGA",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.5925319,
+    "lng": -44.275098,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "bairro_de_fatima",
+    "nome": "BAIRRO DE FÁTIMA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5458547,
+    "lng": -44.2831283,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "bares",
+    "nome": "BARÉS",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5475577,
+    "lng": -44.2695188,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "barreto",
+    "nome": "BARRETO",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5441639,
+    "lng": -44.2621887,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "belira",
+    "nome": "BELIRA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5387805,
+    "lng": -44.2953883,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "bequimao",
+    "nome": "BEQUIMÃO",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5294155,
+    "lng": -44.246131,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "boa_morada",
+    "nome": "BOA MORADA",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5244239,
+    "lng": -44.2669274,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "bom_milagre",
+    "nome": "BOM MILAGRE",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5397661,
+    "lng": -44.2816313,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "bonfim",
+    "nome": "BONFIM",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.530368,
+    "lng": -44.325879,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "calhau",
+    "nome": "CALHAU",
+    "setor_id": "CALHAU_LITORAL",
+    "lat": -2.4908678,
+    "lng": -44.26922,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "camboa",
+    "nome": "CAMBOA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5255027,
+    "lng": -44.2900522,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cantinho_do_ceu",
+    "nome": "CANTINHO DO CÉU",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5202661,
+    "lng": -44.2433317,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "caratatiua",
+    "nome": "CARATATÍUA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5404119,
+    "lng": -44.2691273,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "centro",
+    "nome": "CENTRO",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5318416,
+    "lng": -44.2991183,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "chacara_brasil",
+    "nome": "CHÁCARA BRASIL",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5054624,
+    "lng": -44.2176357,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "chacara_itapiraco",
+    "nome": "CHÁCARA ITAPIRACÓ",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5310661,
+    "lng": -44.2084745,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cidade_nova",
+    "nome": "CIDADE NOVA",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.5911756,
+    "lng": -44.3098378,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cidade_olimpica",
+    "nome": "CIDADE OLÍMPICA",
+    "setor_id": "OPERARIA_OLIMPICA",
+    "lat": -2.5943469,
+    "lng": -44.183545,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cidade_operaria",
+    "nome": "CIDADE OPERÁRIA",
+    "setor_id": "OPERARIA_OLIMPICA",
+    "lat": -2.5761558,
+    "lng": -44.1978004,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "codozinho",
+    "nome": "CODOZINHO",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5724254,
+    "lng": -44.2411823,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohab_anil_i",
+    "nome": "COHAB ANIL I",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5356006,
+    "lng": -44.2212059,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohab_anil_ii",
+    "nome": "COHAB ANIL II",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5385768,
+    "lng": -44.2184821,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohab_anil_iii",
+    "nome": "COHAB ANIL III",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5458558,
+    "lng": -44.2195634,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohab_anil_iv",
+    "nome": "COHAB ANIL IV",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5434085,
+    "lng": -44.2154541,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohafuma",
+    "nome": "COHAFUMA",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5078343,
+    "lng": -44.2668238,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohajap",
+    "nome": "COHAJAP",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.4996278,
+    "lng": -44.240621,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohama",
+    "nome": "COHAMA",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.514075,
+    "lng": -44.2459198,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohaserma",
+    "nome": "COHASERMA",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5076972,
+    "lng": -44.2460429,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohaserma_ii",
+    "nome": "COHASERMA II",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5152069,
+    "lng": -44.2462699,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohatrac",
+    "nome": "COHATRAC",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5388558,
+    "lng": -44.2021126,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohatrac_i",
+    "nome": "COHATRAC I",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5408351,
+    "lng": -44.2055801,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohatrac_ii",
+    "nome": "COHATRAC II",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5380075,
+    "lng": -44.2066634,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohatrac_iii",
+    "nome": "COHATRAC III",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.536262,
+    "lng": -44.1988622,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohatrac_iv",
+    "nome": "COHATRAC IV",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.534342,
+    "lng": -44.2035097,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cohatrac_v",
+    "nome": "COHATRAC V",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5402101,
+    "lng": -44.2104306,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "coheb_do_sacavem",
+    "nome": "COHEB DO SACAVÉM",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5579866,
+    "lng": -44.2549206,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "conjunto_cial",
+    "nome": "CONJUNTO CIAL",
+    "setor_id": "ZONA_RURAL_IND",
+    "lat": -2.5588977,
+    "lng": -44.2379141,
+    "geoSource": "google"
+  },
+  {
+    "id": "conjunto_dom_sebastiao",
+    "nome": "CONJUNTO DOM SEBASTIÃO",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5628428,
+    "lng": -44.2751485,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "conjunto_dos_ipes",
+    "nome": "CONJUNTO DOS IPÊS",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5242845,
+    "lng": -44.2619173,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "conjunto_habitacional_turu",
+    "nome": "CONJUNTO HABITACIONAL TURU",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.4957035,
+    "lng": -44.2193681,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "conjunto_manoel_beckman",
+    "nome": "CONJUNTO MANOEL BECKMAN",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5222327,
+    "lng": -44.2415369,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "coreia",
+    "nome": "CORÉIA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5388411,
+    "lng": -44.2897442,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cruzeiro_do_anil",
+    "nome": "CRUZEIRO DO ANIL",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5396656,
+    "lng": -44.2301429,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "cutim_anil",
+    "nome": "CUTIM ANIL",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.551981,
+    "lng": -44.2484938,
+    "geoSource": "google"
+  },
+  {
+    "id": "diamante",
+    "nome": "DIAMANTE",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5304814,
+    "lng": -44.290006,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "distrito_industrial",
+    "nome": "DISTRITO INDUSTRIAL",
+    "setor_id": "ZONA_RURAL_IND",
+    "lat": -2.6396843,
+    "lng": -44.265828,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "divineia",
+    "nome": "DIVINÉIA",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.4936476,
+    "lng": -44.2187865,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "estiva",
+    "nome": "ESTIVA",
+    "setor_id": "ZONA_RURAL_IND",
+    "lat": -2.7570064,
+    "lng": -44.3515033,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "fabril",
+    "nome": "FABRIL",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5337722,
+    "lng": -44.2896259,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "fatima",
+    "nome": "FÁTIMA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5458547,
+    "lng": -44.2831283,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "fe_em_deus",
+    "nome": "FÉ EM DEUS",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5293656,
+    "lng": -44.2805183,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "filipinho",
+    "nome": "FILIPINHO",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5542963,
+    "lng": -44.2638692,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "forquilha",
+    "nome": "FORQUILHA",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5532801,
+    "lng": -44.2157574,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "fumace",
+    "nome": "FUMACÊ",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.5610502,
+    "lng": -44.3375016,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "gancharia",
+    "nome": "GANCHARIA",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.5548582,
+    "lng": -44.3212724,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "gapara",
+    "nome": "GAPARA",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.5893817,
+    "lng": -44.3003225,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "goiabal",
+    "nome": "GOIABAL",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5429667,
+    "lng": -44.2968318,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "ilhinha",
+    "nome": "ILHINHA",
+    "setor_id": "RENASCENCA_PONTA",
+    "lat": -2.5053993,
+    "lng": -44.3088733,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "ipase",
+    "nome": "IPASE",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5336156,
+    "lng": -44.2598785,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "ipem_sao_cristovao",
+    "nome": "IPEM SÃO CRISTÓVÃO",
+    "setor_id": "SAO_CRISTOVAO_AERO",
+    "lat": -2.5685316,
+    "lng": -44.2195301,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "ipem_turu",
+    "nome": "IPEM TURU",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5217886,
+    "lng": -44.216932,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "itapiraco",
+    "nome": "ITAPIRACÓ",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5313868,
+    "lng": -44.2142732,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "itaqui",
+    "nome": "ITAQUI",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.5578922,
+    "lng": -44.3561947,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "ivar_saldanha",
+    "nome": "IVAR SALDANHA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5440546,
+    "lng": -44.2732329,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jaguarema",
+    "nome": "JAGUAREMA",
+    "setor_id": "ARACAGI_EXTERNO",
+    "lat": -2.4800596,
+    "lng": -44.2094535,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jaracaty",
+    "nome": "JARACATY",
+    "setor_id": "RENASCENCA_PONTA",
+    "lat": -2.5091304,
+    "lng": -44.2865817,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardim_alvorada",
+    "nome": "JARDIM ALVORADA",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5526044,
+    "lng": -44.235476,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardim_america",
+    "nome": "JARDIM AMÉRICA",
+    "setor_id": "OPERARIA_OLIMPICA",
+    "lat": -2.5851464,
+    "lng": -44.1966725,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardim_aracagy",
+    "nome": "JARDIM ARAÇAGY",
+    "setor_id": "ARACAGI_EXTERNO",
+    "lat": -2.5467156,
+    "lng": -44.2022724,
+    "geoSource": "google"
+  },
+  {
+    "id": "jardim_atlantico",
+    "nome": "JARDIM ATLÂNTICO",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5026063,
+    "lng": -44.2268569,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardim_bela_vista",
+    "nome": "JARDIM BELA VISTA",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5089477,
+    "lng": -44.2422095,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardim_das_margaridas",
+    "nome": "JARDIM DAS MARGARIDAS",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.546149,
+    "lng": -44.2089064,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardim_eldorado",
+    "nome": "JARDIM ELDORADO",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5063646,
+    "lng": -44.2300335,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardim_renascenca",
+    "nome": "JARDIM RENASCENÇA",
+    "setor_id": "RENASCENCA_PONTA",
+    "lat": -2.50084,
+    "lng": -44.2900562,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardim_sao_cristovao",
+    "nome": "JARDIM SÃO CRISTÓVÃO",
+    "setor_id": "SAO_CRISTOVAO_AERO",
+    "lat": -2.5718874,
+    "lng": -44.2250088,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardim_sao_cristovao_ii",
+    "nome": "JARDIM SÃO CRISTÓVÃO II",
+    "setor_id": "SAO_CRISTOVAO_AERO",
+    "lat": -2.5700211,
+    "lng": -44.2152561,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardim_sao_francisco",
+    "nome": "JARDIM SÃO FRANCISCO",
+    "setor_id": "RENASCENCA_PONTA",
+    "lat": -2.5146214,
+    "lng": -44.2991792,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardim_turu",
+    "nome": "JARDIM TURU",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5109662,
+    "lng": -44.2144128,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jardins_turu_ii",
+    "nome": "JARDINS TURU II",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5039992,
+    "lng": -44.2100906,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "joao_de_deus",
+    "nome": "JOÃO DE DEUS",
+    "setor_id": "SAO_CRISTOVAO_AERO",
+    "lat": -2.5594449,
+    "lng": -44.2332178,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "joao_paulo",
+    "nome": "JOÃO PAULO",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5448596,
+    "lng": -44.2724433,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "jordoa",
+    "nome": "JORDOA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5475637,
+    "lng": -44.2669443,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "liberdade",
+    "nome": "LIBERDADE",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5275362,
+    "lng": -44.2845012,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "lira",
+    "nome": "LIRA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5416262,
+    "lng": -44.2932153,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "madre_deus",
+    "nome": "MADRE DEUS",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5405771,
+    "lng": -44.2982846,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "maiobao",
+    "nome": "MAIOBÃO",
+    "setor_id": "ARACAGI_EXTERNO",
+    "lat": -2.5392866,
+    "lng": -44.1743995,
+    "geoSource": "google"
+  },
+  {
+    "id": "maiobinha",
+    "nome": "MAIOBINHA",
+    "setor_id": "OPERARIA_OLIMPICA",
+    "lat": -2.5592189,
+    "lng": -44.2047859,
+    "geoSource": "google"
+  },
+  {
+    "id": "maracana",
+    "nome": "MARACANÃ",
+    "setor_id": "ZONA_RURAL_IND",
+    "lat": -2.6368958,
+    "lng": -44.2806315,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "maranhao_novo",
+    "nome": "MARANHÃO NOVO",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5299352,
+    "lng": -44.2541387,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "miritiua",
+    "nome": "MIRITIUA",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.4973379,
+    "lng": -44.1953641,
+    "geoSource": "google"
+  },
+  {
+    "id": "monte_castelo",
+    "nome": "MONTE CASTELO",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5344242,
+    "lng": -44.2807718,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "novo_cohatrac",
+    "nome": "NOVO COHATRAC",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5216193,
+    "lng": -44.2052367,
+    "geoSource": "google"
+  },
+  {
+    "id": "novo_horizonte",
+    "nome": "NOVO HORIZONTE",
+    "setor_id": "ARACAGI_EXTERNO",
+    "lat": -2.733998,
+    "lng": -44.3308603,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "olho_d_agua",
+    "nome": "OLHO D’AGUA",
+    "setor_id": "CALHAU_LITORAL",
+    "lat": -2.4839736,
+    "lng": -44.2276885,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "outeiro_da_cruz",
+    "nome": "OUTEIRO DA CRUZ",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5507087,
+    "lng": -44.2554222,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "pao_de_acucar",
+    "nome": "PÃO DE AÇÚCAR",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5398654,
+    "lng": -44.2402577,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "parque_amazonas",
+    "nome": "PARQUE AMAZONAS",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5500002,
+    "lng": -44.2870131,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "parque_aracagy",
+    "nome": "PARQUE ARAÇAGY",
+    "setor_id": "ARACAGI_EXTERNO",
+    "lat": -2.4968249,
+    "lng": -44.2439,
+    "geoSource": "google"
+  },
+  {
+    "id": "parque_athenas",
+    "nome": "PARQUE ATHENAS",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5008043,
+    "lng": -44.2467169,
+    "geoSource": "google"
+  },
+  {
+    "id": "parque_atlantico",
+    "nome": "PARQUE ATLÂNTICO",
+    "setor_id": "CALHAU_LITORAL",
+    "lat": -2.4866748,
+    "lng": -44.2405869,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "parque_aurora",
+    "nome": "PARQUE AURORA",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5389987,
+    "lng": -44.2116497,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "parque_dos_nobres",
+    "nome": "PARQUE DOS NOBRES",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5578152,
+    "lng": -44.2748078,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "parque_jair",
+    "nome": "PARQUE JAIR",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5063943,
+    "lng": -44.179145,
+    "geoSource": "google"
+  },
+  {
+    "id": "parque_pindorama",
+    "nome": "PARQUE PINDORAMA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5580482,
+    "lng": -44.2800736,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "parque_shalon",
+    "nome": "PARQUE SHALON",
+    "setor_id": "CALHAU_LITORAL",
+    "lat": -2.4919413,
+    "lng": -44.2419781,
+    "geoSource": "google"
+  },
+  {
+    "id": "parque_timbira",
+    "nome": "PARQUE TIMBIRA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5672285,
+    "lng": -44.2780295,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "parque_universitario",
+    "nome": "PARQUE UNIVERSITÁRIO",
+    "setor_id": "SAO_CRISTOVAO_AERO",
+    "lat": -2.5594861,
+    "lng": -44.227944,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "parque_vitoria",
+    "nome": "PARQUE VITÓRIA",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5131237,
+    "lng": -44.2440763,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "peninsula",
+    "nome": "PENÍNSULA",
+    "setor_id": "RENASCENCA_PONTA",
+    "lat": -2.4998481,
+    "lng": -44.3116699,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "piramide",
+    "nome": "PIRÂMIDE",
+    "setor_id": "ARACAGI_EXTERNO",
+    "lat": -2.527384,
+    "lng": -44.2498498,
+    "geoSource": "google"
+  },
+  {
+    "id": "pirapora",
+    "nome": "PIRAPORA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5587348,
+    "lng": -44.243759,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "planalto_vinhais_i",
+    "nome": "PLANALTO VINHAIS I",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5071162,
+    "lng": -44.2570282,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "planalto_anil",
+    "nome": "PLANALTO ANIL",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5402101,
+    "lng": -44.2104306,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "planalto_anil_i",
+    "nome": "PLANALTO ANIL I",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5413671,
+    "lng": -44.2126092,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "planalto_anil_ii",
+    "nome": "PLANALTO ANIL II",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5383333,
+    "lng": -44.2136479,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "planalto_anil_iii",
+    "nome": "PLANALTO ANIL III",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5452581,
+    "lng": -44.2114013,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "planalto_anil_iv",
+    "nome": "PLANALTO ANIL IV",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5501302,
+    "lng": -44.2188635,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "planalto_aurora",
+    "nome": "PLANALTO AURORA",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5557189,
+    "lng": -44.2260533,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "planalto_turu",
+    "nome": "PLANALTO TURU",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.4975676,
+    "lng": -44.214922,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "planalto_turu_ii",
+    "nome": "PLANALTO TURU II",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5001245,
+    "lng": -44.2158516,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "planalto_turu_iii",
+    "nome": "PLANALTO TURU III",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.4975676,
+    "lng": -44.214922,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "planalto_vinhais_ii",
+    "nome": "PLANALTO VINHAIS II",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.503555,
+    "lng": -44.2523334,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "ponta_d_areia",
+    "nome": "PONTA D'AREIA",
+    "setor_id": "RENASCENCA_PONTA",
+    "lat": -2.4967497,
+    "lng": -44.3074688,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "pontal_do_farol",
+    "nome": "PONTAL DO FAROL",
+    "setor_id": "RENASCENCA_PONTA",
+    "lat": -2.4904914,
+    "lng": -44.2976288,
+    "geoSource": "google"
+  },
+  {
+    "id": "quintas_do_calhau",
+    "nome": "QUINTAS DO CALHAU",
+    "setor_id": "CALHAU_LITORAL",
+    "lat": -2.488866,
+    "lng": -44.2523357,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "radional",
+    "nome": "RADIONAL",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5466873,
+    "lng": -44.250893,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "recanto_do_fialho",
+    "nome": "RECANTO DO FIALHO",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.546642,
+    "lng": -44.2481964,
+    "geoSource": "google"
+  },
+  {
+    "id": "recanto_do_turu",
+    "nome": "RECANTO DO TURU",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5139975,
+    "lng": -44.2052015,
+    "geoSource": "google"
+  },
+  {
+    "id": "recanto_dos_nobres",
+    "nome": "RECANTO DOS NOBRES",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5008232,
+    "lng": -44.2521607,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "recanto_dos_passaros",
+    "nome": "RECANTO DOS PÁSSAROS",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5793233,
+    "lng": -44.1908971,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "recanto_dos_signos",
+    "nome": "RECANTO DOS SIGNOS",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5694413,
+    "lng": -44.1920558,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "recanto_dos_vinhais",
+    "nome": "RECANTO DOS VINHAIS",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5210337,
+    "lng": -44.2640783,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "recanto_santos_dumont",
+    "nome": "RECANTO SANTOS DUMONT",
+    "setor_id": "SAO_CRISTOVAO_AERO",
+    "lat": -2.5167681,
+    "lng": -44.2059531,
+    "geoSource": "google"
+  },
+  {
+    "id": "redencao",
+    "nome": "REDENÇÃO",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5528661,
+    "lng": -44.2650623,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "renascenca_i",
+    "nome": "RENASCENÇA I",
+    "setor_id": "RENASCENCA_PONTA",
+    "lat": -2.5054376,
+    "lng": -44.295679,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "renascenca_ii",
+    "nome": "RENASCENÇA II",
+    "setor_id": "RENASCENCA_PONTA",
+    "lat": -2.4976014,
+    "lng": -44.29003,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "residencial_araras",
+    "nome": "RESIDENCIAL ARARAS",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5158973,
+    "lng": -44.2387736,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "residencial_esperanca",
+    "nome": "RESIDENCIAL ESPERANÇA",
+    "setor_id": "ZONA_RURAL_IND",
+    "lat": -2.5195488,
+    "lng": -44.24013,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "residencial_paraiso",
+    "nome": "RESIDENCIAL PARAÍSO",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.5727493,
+    "lng": -44.2960344,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "residencial_pinheiros",
+    "nome": "RESIDENCIAL PINHEIROS",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5225913,
+    "lng": -44.2374147,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "residencial_primavera",
+    "nome": "RESIDENCIAL PRIMAVERA",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5197455,
+    "lng": -44.2342188,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "residencial_primavera_turu",
+    "nome": "RESIDENCIAL PRIMAVERA TURU",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.522392,
+    "lng": -44.2307643,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "retiro_natal",
+    "nome": "RETIRO NATAL",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5371603,
+    "lng": -44.2848931,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "rio_anil",
+    "nome": "RIO ANIL",
+    "setor_id": "COHAB_ANGELIM",
+    "lat": -2.5444733,
+    "lng": -44.2444288,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "sa_viana",
+    "nome": "SÁ VIANA",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.5588002,
+    "lng": -44.3017925,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "sacavem",
+    "nome": "SACAVÉM",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5555478,
+    "lng": -44.2570567,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "santa_cruz",
+    "nome": "SANTA CRUZ",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5464212,
+    "lng": -44.2466897,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "santa_efigenia",
+    "nome": "SANTA EFIGÊNIA",
+    "setor_id": "OPERARIA_OLIMPICA",
+    "lat": -2.5760446,
+    "lng": -44.1899531,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "santa_rosa",
+    "nome": "SANTA ROSA",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5011797,
+    "lng": -44.2133054,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "santo_antonio",
+    "nome": "SANTO ANTÔNIO",
+    "setor_id": "SAO_CRISTOVAO_AERO",
+    "lat": -2.555567,
+    "lng": -44.2468256,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "santos_dumont",
+    "nome": "SANTOS DUMONT",
+    "setor_id": "SAO_CRISTOVAO_AERO",
+    "lat": -2.5524235,
+    "lng": -44.2377687,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "sao_bernardo",
+    "nome": "SÃO BERNARDO",
+    "setor_id": "SAO_CRISTOVAO_AERO",
+    "lat": -2.5627784,
+    "lng": -44.2204232,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "sao_francisco",
+    "nome": "SÃO FRANCISCO",
+    "setor_id": "RENASCENCA_PONTA",
+    "lat": -2.511897,
+    "lng": -44.3040792,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "sao_marcos",
+    "nome": "SÃO MARCOS",
+    "setor_id": "CALHAU_LITORAL",
+    "lat": -2.4919444,
+    "lng": -44.2862118,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "sao_raimundo",
+    "nome": "SÃO RAIMUNDO",
+    "setor_id": "SAO_CRISTOVAO_AERO",
+    "lat": -2.5966903,
+    "lng": -44.2282494,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "sitio_saramanta",
+    "nome": "SÍTIO SARAMANTA",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5510543,
+    "lng": -44.194826,
+    "geoSource": "google"
+  },
+  {
+    "id": "sol_e_mar",
+    "nome": "SOL E MAR",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.4901535,
+    "lng": -44.2156239,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "tibiri",
+    "nome": "TIBIRI",
+    "setor_id": "ZONA_RURAL_IND",
+    "lat": -2.6133767,
+    "lng": -44.2447644,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "tirirical",
+    "nome": "TIRIRICAL",
+    "setor_id": "SAO_CRISTOVAO_AERO",
+    "lat": -2.5735754,
+    "lng": -44.2388887,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "tunel_do_sacavem",
+    "nome": "TÚNEL DO SACAVÉM",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5509352,
+    "lng": -44.2610535,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "turu",
+    "nome": "TURU",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5203175,
+    "lng": -44.225148,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vera_cruz",
+    "nome": "VERA CRUZ",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.546062,
+    "lng": -44.2448716,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_bacanga",
+    "nome": "VILA BACANGA",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.5565051,
+    "lng": -44.3138755,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_bessa",
+    "nome": "VILA BESSA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5379821,
+    "lng": -44.2945269,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_brasil",
+    "nome": "VILA BRASIL",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5629101,
+    "lng": -44.213617,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_embratel",
+    "nome": "VILA EMBRATEL",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.567064,
+    "lng": -44.3115274,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_isabel_cafeteira",
+    "nome": "VILA ISABEL CAFETEIRA",
+    "setor_id": "COHATRAC_ITAPIRACO",
+    "lat": -2.5463056,
+    "lng": -44.2265418,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_luizao",
+    "nome": "VILA LUIZÃO",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.4923868,
+    "lng": -44.212184,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_maranhao",
+    "nome": "VILA MARANHÃO",
+    "setor_id": "ZONA_RURAL_IND",
+    "lat": -2.623126,
+    "lng": -44.3176396,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_mauro_fecury_i",
+    "nome": "VILA MAURO FECURY I",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.542464,
+    "lng": -44.3325874,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_mauro_fecury_ii",
+    "nome": "VILA MAURO FECURY II",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.552244,
+    "lng": -44.3328677,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_nova",
+    "nome": "VILA NOVA",
+    "setor_id": "ITAQUI_BACANGA",
+    "lat": -2.5374141,
+    "lng": -44.3275832,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_palmeira",
+    "nome": "VILA PALMEIRA",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5418514,
+    "lng": -44.2544959,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_passos",
+    "nome": "VILA PASSOS",
+    "setor_id": "CENTRO_EIXO",
+    "lat": -2.5365674,
+    "lng": -44.2879037,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_primavera_maracana",
+    "nome": "VILA PRIMAVERA (MARACANÃ)",
+    "setor_id": "ZONA_RURAL_IND",
+    "lat": -2.6242546,
+    "lng": -44.2746524,
+    "geoSource": "google"
+  },
+  {
+    "id": "vila_vicente_fialho",
+    "nome": "VILA VICENTE FIALHO",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.510148,
+    "lng": -44.2381746,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_vitoria",
+    "nome": "VILA VITÓRIA",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.607026,
+    "lng": -44.2048771,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vila_zeni",
+    "nome": "VILA ZENI",
+    "setor_id": "ARACAGI_EXTERNO",
+    "lat": -2.5759657,
+    "lng": -44.185854,
+    "geoSource": "google"
+  },
+  {
+    "id": "vinhais",
+    "nome": "VINHAIS",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5139466,
+    "lng": -44.2553796,
+    "geoSource": "nominatim"
+  },
+  {
+    "id": "vivendas_da_cohama_condominio",
+    "nome": "VIVENDAS DA COHAMA (CONDOMÍNIO)",
+    "setor_id": "COHAMA_VINHAIS",
+    "lat": -2.5192043,
+    "lng": -44.2362884,
+    "geoSource": "google"
+  },
+  {
+    "id": "vivendas_do_turu",
+    "nome": "VIVENDAS DO TURU",
+    "setor_id": "GRANDE_TURU",
+    "lat": -2.5005538,
+    "lng": -44.2185068,
+    "geoSource": "nominatim"
+  }
+]

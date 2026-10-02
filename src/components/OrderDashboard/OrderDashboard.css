@@ -1,0 +1,1266 @@
+/* ═══════════════════════════════════════════════════════════════
+   OrderDashboard — o balcão de expedição
+   A linguagem da comanda no nível da página: títulos de coluna com
+   linha de picote e ponto de estado (índigo = em preparo, verde =
+   saiu, âmbar = agendado), seletor de datas como segmented control
+   e o datepicker vestindo a pele do sistema.
+
+   ARQUITETURA DE LAYOUT (inalterada)
+   ──────────────────────────────────
+   .ops                     → flex column, height: 100%, overflow: hidden
+     .order-dashboard-menu  → sticky no topo
+     .lists                 → flex row, overflow-y: auto, flex: 1
+       section              → cada coluna de pedidos
+   ═══════════════════════════════════════════════════════════════ */
+
+.ops {
+  /* Tokens — os mesmos do OrderCard/OrdersList */
+  --oc-ink:        var(--sys-color-text-main, #1C1D26);
+  --oc-ink-soft:   var(--sys-color-text-muted, #5A5C6E);
+  --oc-ink-faint:  var(--sys-color-text-faint, #9A9CB0);
+  --oc-accent:     var(--sys-color-accent, #32378E);
+  --oc-accent-bg:  var(--sys-color-accent-soft, #F0F1FA);
+  --oc-line:       var(--sys-color-line, #E8E9F1);
+  --oc-perf:       var(--sys-color-perf, #D5D7E4);
+  --oc-paper:      var(--sys-color-surface, #FFFFFF);
+  --oc-ok:         var(--sys-color-success, #06A77D);
+  --oc-warn:       var(--sys-color-warning, #B45309);
+  --oc-warn-dot:   var(--sys-color-warning-dot, #F59E0B);
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ─── Barra de navegação — sticky dentro do .ops ───────────── */
+
+.order-dashboard-menu {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* fade para as listas que sobem por baixo */
+  background: linear-gradient(to bottom, var(--sys-color-background) 62%, transparent 100%);
+  padding: 8px 0 30px 0;
+  border-bottom: none;
+  flex-shrink: 0;
+  gap: 14px;
+}
+
+/* ─── Seletor de datas — segmented control ─────────────────── */
+
+.order-dashboard-menu .data-button-list {
+  display: flex !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 5px !important;
+  align-items: center;
+  background-color: var(--oc-paper);
+  border-radius: var(--radius-pill, 99px);
+  box-shadow: var(--shadow-soft, 0 2px 10px rgba(28, 29, 38, 0.06));
+  border: 1px solid var(--oc-line);
+  flex-shrink: 0;
+  gap: 3px !important;
+}
+
+.order-dashboard-menu .data-button-list li {
+  display: flex;
+}
+
+.order-dashboard-menu .data-button-list button {
+  color: var(--oc-ink-soft);
+  font-size: 0.83rem;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-pill, 99px);
+  padding: 9px 17px;
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-dashboard-menu .data-button-list button:hover:not(.active) {
+  color: var(--oc-ink);
+  background-color: var(--sys-color-hover-bg, #F2F3F8);
+}
+
+.order-dashboard-menu .data-button-list button.active {
+  color: #ffffff;
+  background-color: var(--oc-accent);
+  box-shadow: 0 3px 12px rgba(var(--sys-color-accent-rgb), 0.32);
+}
+
+.order-dashboard-menu .data-button-list button:disabled,
+.search-clear-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.order-dashboard-menu.is-trip-locked .search-box {
+  opacity: 0.72;
+}
+
+.order-dashboard-menu.is-trip-locked .search-box input:disabled {
+  cursor: not-allowed;
+}
+
+/* ─── Calendário: separado dos presets por um fio ──────────── */
+
+.open-calendar-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: 3px;
+  padding-left: 7px;
+  border-left: 1px solid var(--oc-line); /* presets | escolha livre */
+}
+
+.open-calendar-button button {
+  padding: 9px 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill, 99px);
+  font-size: 1.05rem;
+}
+
+.open-calendar-button button.active {
+  background-color: var(--oc-accent);
+  color: #ffffff;
+}
+
+/* ─── Dropdown do datepicker — vestindo a pele do sistema ──── */
+
+.calendar {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  z-index: 200;
+  background: var(--oc-paper);
+  border-radius: var(--radius-card, 16px);
+  box-shadow: 0 4px 10px rgba(28, 29, 38, 0.06), 0 18px 42px rgba(28, 29, 38, 0.16);
+  border: 1px solid var(--oc-line);
+  overflow: hidden;
+  animation: fadeIn 0.18s ease-out;
+  padding: 6px;
+}
+
+.calendar .react-datepicker {
+  border: none;
+  font-family: 'Inter Variable', sans-serif;
+  background: transparent;
+}
+
+.calendar .react-datepicker__header {
+  background: transparent;
+  border-bottom: 1.5px dashed var(--oc-perf); /* o picote também mora aqui */
+  padding-top: 10px;
+}
+
+.calendar .react-datepicker__current-month {
+  color: var(--oc-ink) !important;
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.calendar .react-datepicker__day-name {
+  color: var(--oc-ink-faint);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  width: 2rem;
+}
+
+.calendar .react-datepicker__day {
+  color: var(--oc-ink-soft);
+  font-size: 0.8rem;
+  font-weight: 500;
+  width: 2rem;
+  line-height: 2rem;
+  border-radius: 9px;
+  transition: background 0.12s ease, color 0.12s ease;
+  font-variant-numeric: tabular-nums;
+}
+
+.calendar .react-datepicker__day:hover {
+  background-color: var(--oc-accent-bg);
+  color: var(--oc-accent);
+}
+
+.calendar .react-datepicker__day--today {
+  font-weight: 800;
+  color: var(--oc-accent);
+}
+
+.calendar .react-datepicker__day--selected,
+.calendar .react-datepicker__day--keyboard-selected {
+  background-color: var(--oc-accent);
+  color: #fff;
+  font-weight: 700;
+}
+
+.calendar .react-datepicker__day--outside-month {
+  color: var(--sys-color-text-faint, #C9CBDA);
+}
+
+.calendar .react-datepicker__navigation {
+  top: 12px;
+}
+
+.calendar .react-datepicker__navigation-icon::before {
+  border-color: var(--oc-ink-faint);
+  border-width: 2px 2px 0 0;
+}
+
+.calendar .react-datepicker__navigation:hover *::before {
+  border-color: var(--oc-accent);
+}
+
+/* ─── Campo de busca ───────────────────────────────────────── */
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 340px;
+  margin: 0;
+}
+
+.order-dashboard-menu .search-box input {
+  padding-left: 42px;
+  background-color: var(--oc-paper);
+  border-radius: var(--radius-pill, 99px);
+  box-shadow: var(--shadow-soft, 0 2px 10px rgba(28, 29, 38, 0.06));
+  border: 1px solid var(--oc-line);
+  color: var(--oc-ink);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+
+  /* Lupa SVG — no cinza-lavanda do sistema */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239A9CB0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 15px center;
+  background-size: 17px;
+}
+
+.order-dashboard-menu .search-box input::placeholder {
+  color: var(--oc-ink-faint);
+}
+
+.search-box input:focus {
+  border-color: var(--oc-accent);
+  box-shadow: 0 0 0 4px rgba(var(--sys-color-accent-rgb), 0.09);
+}
+
+/* ─── Área de listas — scroll aqui, não no .ops ───────────── */
+
+.lists {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  gap: 14px;
+  width: 100%;
+  padding: 0.75rem 0 1rem;
+  box-sizing: border-box;
+  align-items: flex-start;
+  /* Sem reserva de espaço pra trilha de rotas aqui: quem faz isso é o .ops
+     inteiro, via --route-rail-width (ver a media query no fim do arquivo),
+     o que alinha a lista E o menu de uma vez só. Uma reserva daqui seria
+     sobrescrita por aquela regra (bem mais específica) e só confundiria
+     quem viesse ajustar o espaçamento depois. */
+}
+
+/* Cada coluna */
+.lists > section {
+  flex: 1 1 0;
+  min-width: 0;
+  background-color: inherit;
+  border-radius: var(--radius-card, 16px);
+  padding: 0 0.5rem 0.8rem;
+}
+
+/* Títulos de coluna: régua de picote + ponto de estado.
+   O ponto usa a MESMA semântica de cor dos cards:
+   índigo = em preparo · verde = saiu · âmbar = agendado */
+.lists h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.3rem 2px 0.6rem;
+  margin: 0 0 10px;
+  color: var(--oc-ink-faint);
+  font-weight: 700;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  border-bottom: 1.5px dashed var(--oc-perf);
+}
+
+.lists h3::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--col-dot, var(--oc-accent));
+}
+
+#accepted-heading { --col-dot: var(--oc-accent); }   /* em preparo */
+#sent-heading     { --col-dot: var(--oc-ok); }        /* saíram */
+#future-heading   { --col-dot: var(--oc-warn-dot); }  /* agendados */
+
+/* ─── Acessibilidade & movimento ───────────────────────────── */
+
+.order-dashboard-menu button:focus-visible,
+.search-box input:focus-visible {
+  outline: 2px solid var(--oc-accent);
+  outline-offset: 2px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .calendar {
+    animation: none;
+  }
+  .order-dashboard-menu .data-button-list button,
+  .search-box input,
+  .calendar .react-datepicker__day {
+    transition: none;
+  }
+}
+
+/* ─── Mobile ───────────────────────────────────────────────── */
+
+@media (max-width: 666px) {
+  .order-dashboard-menu {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 4px 0 12px;
+  }
+
+  .order-dashboard-menu .data-button-list {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    flex-shrink: 1;
+    margin: 0 !important;
+    max-width: 100%;
+  }
+
+  .order-dashboard-menu .data-button-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .order-dashboard-menu .data-button-list button {
+    padding: 9px 14px;
+    white-space: nowrap;
+  }
+
+  .search-box {
+    flex: 1 1 100%;
+    max-width: none;
+    margin: 0;
+  }
+
+  .lists {
+    padding: 0 0 1rem;
+    flex-direction: column;
+    overflow-y: auto;
+    padding-right: 0;
+  }
+
+  .lists > section {
+    width: 100%;
+    padding: 0 0 0.8rem;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════
+   Pedidos — refinamento operacional
+   Controles compactos, busca recuperável e colunas bem delimitadas.
+   ════════════════════════════════════════════════════════════════ */
+
+.dashboard-factory .dashboard-view .ops .order-dashboard-menu {
+  min-height: 48px;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 7px 9px;
+  border: 1px solid var(--oc-line);
+  border-radius: 11px;
+  background: var(--oc-paper);
+  box-shadow: var(--sys-shadow-sm);
+}
+
+.order-date-filter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.order-toolbar-label {
+  color: var(--oc-ink-faint);
+  font-size: 0.67rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.dashboard-factory .dashboard-view .ops .order-dashboard-menu .data-button-list {
+  gap: 3px !important;
+  padding: 3px !important;
+  border-radius: 9px;
+  background: var(--sys-color-input-bg);
+  box-shadow: none;
+}
+
+.dashboard-factory .dashboard-view .ops .order-dashboard-menu .data-button-list button {
+  min-height: 32px;
+  padding: 6px 11px;
+  border-radius: 7px;
+}
+
+.dashboard-factory .dashboard-view .ops .order-dashboard-menu .data-button-list button.active {
+  color: var(--oc-accent);
+  background: var(--oc-paper);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+}
+
+.dashboard-factory .dashboard-view .ops .open-calendar-button {
+  margin-left: 2px;
+  padding-left: 5px;
+}
+
+.dashboard-factory .dashboard-view .ops .open-calendar-button > button {
+  width: 32px;
+  padding: 0;
+}
+
+.dashboard-factory .dashboard-view .ops .search-box {
+  flex: 0 1 300px;
+  max-width: 300px;
+  min-width: 210px;
+  margin-left: auto;
+}
+
+.dashboard-factory .dashboard-view .ops .search-box input {
+  width: 100%;
+  min-height: 36px;
+  padding: 7px 38px 7px 36px;
+  border-radius: 9px;
+  background-color: var(--sys-color-input-bg);
+  background-image: none;
+  box-shadow: none;
+  appearance: none;
+}
+
+.dashboard-factory .dashboard-view .ops .search-box input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.search-box-icon {
+  position: absolute;
+  left: 12px;
+  z-index: 1;
+  color: var(--oc-ink-faint);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.search-clear-button {
+  position: absolute;
+  right: 6px;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--oc-ink-faint);
+  cursor: pointer;
+}
+
+.search-clear-button:hover {
+  color: var(--oc-ink);
+  background: var(--sys-color-hover-bg);
+}
+
+.dashboard-factory .dashboard-view .ops .search-box input:focus {
+  border-color: var(--oc-accent);
+  background-color: var(--oc-paper);
+  box-shadow: 0 0 0 3px rgba(var(--sys-color-accent-rgb), 0.09);
+}
+
+.dashboard-factory .dashboard-view .ops .lists {
+  gap: 12px;
+  padding: 0 2px 1rem;
+  padding-right: 2px;
+}
+
+.dashboard-factory .dashboard-view .ops .lists > section {
+  padding: 10px;
+  border: 1px solid var(--oc-line);
+  border-radius: 12px;
+  background: var(--sys-color-surface-subtle);
+}
+
+.dashboard-factory .dashboard-view .ops .lists--single > section {
+  max-width: 760px;
+}
+
+.search-clear-button:focus-visible {
+  outline: 2px solid var(--oc-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 800px) {
+  .dashboard-factory .dashboard-view .ops .order-dashboard-menu {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .order-date-filter {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .order-toolbar-label {
+    padding-left: 2px;
+  }
+
+  .dashboard-factory .dashboard-view .ops .search-box {
+    flex: 1 1 auto;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    margin: 0;
+  }
+}
+
+@media (max-width: 666px) {
+  .dashboard-factory .dashboard-view .ops .lists > section {
+    padding: 9px;
+  }
+}
+
+/* Pedidos — redução de peso visual: menos contornos, mais separação por luz e cor. */
+.dashboard-factory .dashboard-view .ops .order-dashboard-menu {
+  margin-bottom: 15px;
+  padding: 5px 2px;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.dashboard-factory .dashboard-view .ops .lists {
+  gap: 18px;
+}
+
+.dashboard-factory .dashboard-view .ops .lists > .order-section {
+  padding: 12px;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.dashboard-factory .dashboard-view .ops .order-section--pending {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-primary-soft) 72%, var(--sys-color-surface-subtle)) 0%,
+      color-mix(in srgb, var(--sys-color-primary-soft) 32%, var(--sys-color-surface-subtle)) 100%
+    );
+}
+
+.dashboard-factory .dashboard-view .ops .order-section--payment {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-warning-soft) 52%, var(--sys-color-surface-subtle)) 0%,
+      color-mix(in srgb, var(--sys-color-warning-soft) 16%, var(--sys-color-surface-subtle)) 100%
+    );
+}
+
+.dashboard-factory .dashboard-view .ops .order-section--completed {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-success-soft) 70%, var(--sys-color-surface-subtle)) 0%,
+      color-mix(in srgb, var(--sys-color-success-soft) 28%, var(--sys-color-surface-subtle)) 100%
+    );
+}
+
+.dashboard-factory .dashboard-view .ops .order-section--scheduled {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-warning-soft) 72%, var(--sys-color-surface-subtle)) 0%,
+      color-mix(in srgb, var(--sys-color-warning-soft) 30%, var(--sys-color-surface-subtle)) 100%
+    );
+}
+
+/* Conflitos PIX precisam aparecer no fluxo operacional, não só no Chat. */
+.pix-conflict-notice {
+  display: grid;
+  grid-template-columns: auto minmax(220px, 1fr) auto;
+  align-items: center;
+  gap: 11px;
+  flex-shrink: 0;
+  margin: 0 2px 12px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--sys-color-danger) 24%, var(--oc-line));
+  border-radius: 11px;
+  background:
+    linear-gradient(
+      105deg,
+      color-mix(in srgb, var(--sys-color-danger-soft) 72%, var(--oc-paper)) 0%,
+      var(--oc-paper) 72%
+    );
+  box-shadow: var(--sys-shadow-sm);
+}
+
+.pix-conflict-notice-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--sys-color-danger-soft);
+  color: var(--sys-color-danger);
+  font-size: 1.12rem;
+}
+
+.pix-conflict-notice-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pix-conflict-notice-copy strong {
+  color: var(--oc-ink);
+  font-size: 0.8rem;
+  line-height: 1.3;
+}
+
+.pix-conflict-notice-copy span {
+  color: var(--oc-ink-soft);
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+.pix-conflict-order-list {
+  display: flex;
+  max-width: 360px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.pix-conflict-order-chip,
+.pix-conflict-order-more {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--sys-color-danger-soft);
+  color: var(--sys-color-danger);
+  font-size: 0.68rem;
+  font-weight: 750;
+  white-space: nowrap;
+}
+
+.pix-conflict-order-more {
+  background: var(--sys-color-hover-bg);
+  color: var(--oc-ink-soft);
+}
+
+@media (max-width: 800px) {
+  .pix-conflict-notice {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .pix-conflict-order-list {
+    grid-column: 1 / -1;
+    max-width: none;
+    justify-content: flex-start;
+    padding-left: 45px;
+  }
+}
+
+@media (max-width: 666px) {
+  .pix-conflict-notice {
+    margin-inline: 0;
+    padding: 9px 10px;
+  }
+
+  .pix-conflict-order-list {
+    padding-left: 0;
+  }
+}
+
+/* Busca recente: o período escolhido deixa de limitar os resultados e os
+   pedidos passam a ser organizados por dia, sem transformar a tela num painel
+   carregado. Hoje e ontem ficam sempre visíveis; anteontem é sob demanda. */
+/* Este bloco embrulha SÓ o resumo "Resultados por dia" — a lista de pedidos
+   (.lists) é irmã dele, não filha. Com "flex: 1" ele esticava para ocupar
+   toda a altura livre do .ops (que é flex column) e empurrava as listas para
+   baixo, deixando um vão enorme entre o resumo e os pedidos assim que uma
+   busca era feita. Deve ocupar apenas a própria altura. */
+.order-search-view {
+  display: flex;
+  flex: 0 0 auto;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.order-search-overview {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  margin: 0 2px 12px;
+  padding: 11px 12px;
+  border: 1px solid color-mix(in srgb, var(--oc-accent) 12%, var(--oc-line));
+  border-radius: 12px;
+  background:
+    linear-gradient(
+      110deg,
+      color-mix(in srgb, var(--oc-accent-bg) 54%, var(--oc-paper)) 0%,
+      var(--oc-paper) 62%
+    );
+  box-shadow: var(--sys-shadow-sm);
+}
+
+.order-search-overview-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.order-search-overview-copy strong {
+  color: var(--oc-ink);
+  font-size: 0.82rem;
+  line-height: 1.25;
+}
+
+.order-search-overview-copy span {
+  overflow: hidden;
+  color: var(--oc-ink-faint);
+  font-size: 0.7rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.order-search-days {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.order-search-day-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  padding: 0 7px 0 10px;
+  border: 1px solid var(--oc-line);
+  border-radius: 999px;
+  background: var(--oc-paper);
+  color: var(--oc-ink-soft);
+  font-size: 0.72rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.order-search-day-pill b {
+  display: grid;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--sys-color-surface-subtle);
+  color: var(--oc-ink);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-search-day-pill--today {
+  border-color: color-mix(in srgb, var(--oc-accent) 20%, var(--oc-line));
+  background: color-mix(in srgb, var(--oc-accent-bg) 62%, var(--oc-paper));
+  color: var(--oc-accent);
+}
+
+.order-search-day-pill--today b {
+  background: var(--oc-accent);
+  color: #fff;
+}
+
+.order-search-day-pill--older {
+  border-color: color-mix(in srgb, var(--oc-warn-dot) 20%, var(--oc-line));
+  background: color-mix(in srgb, var(--sys-color-warning-soft) 50%, var(--oc-paper));
+  color: var(--oc-warn);
+}
+
+.order-search-day-pill--older b {
+  background: var(--sys-color-warning-soft);
+  color: var(--oc-warn);
+}
+
+.dashboard-factory .dashboard-view .ops .lists.lists--search {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 14px;
+  padding-top: 0;
+}
+
+.dashboard-factory .dashboard-view .ops .lists--search > .order-search-day {
+  width: auto;
+  min-width: 0;
+  padding: 11px;
+  border: 1px solid transparent;
+}
+
+.dashboard-factory .dashboard-view .ops .order-search-day--today {
+  border-color: color-mix(in srgb, var(--oc-accent) 15%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--oc-accent-bg) 72%, var(--sys-color-surface-subtle)) 0%,
+      color-mix(in srgb, var(--oc-accent-bg) 24%, var(--sys-color-surface-subtle)) 100%
+    );
+}
+
+.dashboard-factory .dashboard-view .ops .order-search-day--yesterday {
+  border-color: var(--oc-line);
+  background: var(--sys-color-surface-subtle);
+}
+
+.dashboard-factory .dashboard-view .ops .order-search-day--older {
+  border-color: color-mix(in srgb, var(--oc-warn-dot) 18%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--sys-color-warning-soft) 58%, var(--sys-color-surface-subtle)) 0%,
+      var(--sys-color-surface-subtle) 100%
+    );
+}
+
+.order-search-day--today .order-column-header--search .order-column-status {
+  background: var(--oc-accent);
+  box-shadow: 0 0 0 4px var(--oc-accent-bg);
+}
+
+.order-search-day--yesterday .order-column-header--search .order-column-status {
+  background: var(--oc-ink-faint);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--oc-ink-faint) 14%, transparent);
+}
+
+.order-search-day--older .order-column-header--search .order-column-status {
+  background: var(--oc-warn-dot);
+  box-shadow: 0 0 0 4px var(--sys-color-warning-soft);
+}
+
+.order-search-empty,
+.order-search-older-empty {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 112px;
+  padding: 20px;
+  border: 1px dashed var(--oc-line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--oc-paper) 58%, transparent);
+  color: var(--oc-ink-soft);
+  text-align: left;
+}
+
+.order-search-empty-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 10px;
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+  font-size: 1.15rem;
+}
+
+.order-search-empty strong,
+.order-search-older-empty strong {
+  display: block;
+  color: var(--oc-ink);
+  font-size: 0.8rem;
+}
+
+.order-search-empty p {
+  margin: 3px 0 0;
+  color: var(--oc-ink-faint);
+  font-size: 0.72rem;
+}
+
+.order-search-older-empty {
+  min-height: 70px;
+  flex-direction: column;
+  gap: 3px;
+  text-align: center;
+}
+
+.order-search-older-empty span {
+  color: var(--oc-ink-faint);
+  font-size: 0.7rem;
+}
+
+@media (max-width: 800px) {
+  .dashboard-factory .dashboard-view .ops .order-dashboard-menu {
+    padding: 7px;
+    border-color: var(--oc-line);
+    background: var(--oc-paper);
+  }
+
+  .dashboard-factory .dashboard-view .ops .lists {
+    gap: 13px;
+  }
+
+  .order-search-overview {
+    grid-template-columns: 1fr auto;
+  }
+
+  .order-search-overview-copy {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 666px) {
+  .order-search-overview {
+    margin-inline: 0;
+    padding: 10px;
+  }
+
+  .order-search-overview-copy span {
+    white-space: normal;
+  }
+
+  .order-search-days {
+    min-width: 0;
+  }
+
+  .order-search-day-pill {
+    padding-left: 8px;
+  }
+
+  .dashboard-factory .dashboard-view .ops .lists.lists--search {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard-factory .dashboard-view .ops .lists--search > .order-search-day {
+    width: 100%;
+    padding: 9px;
+  }
+}
+
+/* Faixa operacional das rotas.
+   O RouteKaban é flutuante para continuar acessível durante a rolagem; por
+   isso, o conteúdo de pedidos precisa reservar o espaço que ele ocupa. */
+@media (min-width: 667px) {
+  .dashboard-factory .dashboard-view .ops {
+    --route-rail-width: 126px;
+    box-sizing: border-box;
+    padding-inline-end: var(--route-rail-width);
+  }
+
+  .dashboard-factory .dashboard-view .ops .order-dashboard-menu,
+  .dashboard-factory .dashboard-view .ops .lists {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .dashboard-factory .dashboard-view .ops .lists {
+    padding-right: 2px;
+  }
+}
+
+@media (min-width: 667px) and (max-width: 980px) {
+  .dashboard-factory .dashboard-view .ops {
+    --route-rail-width: 112px;
+  }
+}
+
+/* Barra operacional: data, modalidade e busca expansível. */
+.dashboard-factory .dashboard-view .ops .order-dashboard-menu {
+  position: relative;
+  flex-wrap: nowrap;
+}
+
+.fulfillment-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px;
+  border: 1px solid var(--oc-line);
+  border-radius: 9px;
+  background: var(--sys-color-input-bg);
+}
+
+.fulfillment-filter button {
+  min-height: 32px;
+  padding: 6px 11px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--oc-ink-soft);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 680;
+  cursor: pointer;
+  transition: color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.fulfillment-filter button:hover:not(:disabled):not(.active) {
+  color: var(--oc-ink);
+  background: var(--sys-color-hover-bg);
+}
+
+.fulfillment-filter button.active {
+  color: var(--oc-accent);
+  background: var(--oc-paper);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+}
+
+.fulfillment-filter button:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.order-search-control {
+  position: relative;
+  display: flex;
+  flex: 0 0 92px;
+  width: 92px;
+  min-height: 34px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.search-trigger-button {
+  display: inline-flex;
+  width: 100%;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--oc-ink-soft);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: color 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
+}
+
+.search-trigger-button:hover {
+  color: var(--oc-accent);
+  border-color: color-mix(in srgb, var(--oc-accent) 16%, var(--oc-line));
+  background: color-mix(in srgb, var(--oc-accent) 6%, var(--oc-paper));
+}
+
+.dashboard-factory .dashboard-view .ops .order-search-control .search-box {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.order-search-control.is-open {
+  position: relative;
+  flex: 0 0 92px;
+  width: 92px;
+  min-height: 36px;
+  z-index: 30;
+  margin: 0;
+  margin-left: auto;
+  padding: 0;
+}
+
+.dashboard-factory .dashboard-view .ops .order-search-control.is-open .search-box {
+  inset: auto;
+  top: 0;
+  right: 0;
+  width: min(320px, calc(100vw - 16px));
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.dashboard-factory .dashboard-view .ops .order-search-control.is-open .search-box input {
+  height: 36px;
+  min-height: 36px;
+  padding-inline: 36px 39px;
+  border-color: color-mix(in srgb, var(--oc-accent) 30%, var(--oc-line));
+  border-radius: 9px;
+  background: var(--oc-paper);
+  box-shadow: 0 7px 18px -14px rgba(15, 23, 42, 0.38), 0 0 0 3px rgba(var(--sys-color-accent-rgb), 0.07);
+  font-size: 0.8rem;
+}
+
+.order-search-control.is-open .search-box-icon {
+  left: 11px;
+  width: 16px;
+  height: 16px;
+}
+
+.order-search-control.is-open .search-clear-button {
+  right: 6px;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+}
+
+.order-section--ready {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, #0ea5a8 10%, var(--sys-color-surface-subtle)) 0%,
+      color-mix(in srgb, #0ea5a8 4%, var(--sys-color-surface-subtle)) 100%
+    ) !important;
+}
+
+.order-search-day--ready {
+  border-color: color-mix(in srgb, #0ea5a8 16%, transparent) !important;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, #0ea5a8 9%, var(--sys-color-surface-subtle)) 0%,
+      var(--sys-color-surface-subtle) 100%
+    ) !important;
+}
+
+@media (max-width: 980px) and (min-width: 667px) {
+  .dashboard-factory .dashboard-view .ops .lists:not(.lists--search) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+  }
+}
+
+@media (max-width: 800px) {
+  .dashboard-factory .dashboard-view .ops .order-dashboard-menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .order-date-filter {
+    align-items: center;
+    flex-direction: row;
+  }
+
+  .fulfillment-filter {
+    order: 3;
+    width: 100%;
+  }
+
+  .fulfillment-filter button {
+    flex: 1 1 0;
+  }
+
+  .order-search-control {
+    flex-basis: 38px;
+    width: 38px;
+    margin-left: auto;
+  }
+
+  .search-trigger-button {
+    width: 38px;
+    padding: 0;
+  }
+
+  .search-trigger-button span {
+    display: none;
+  }
+
+  .order-search-control.is-open {
+    flex-basis: 38px;
+    width: 38px;
+  }
+
+  .dashboard-factory .dashboard-view .ops .order-search-control.is-open .search-box {
+    top: 0;
+    right: 0;
+    width: min(300px, calc(100vw - 18px));
+  }
+}
+
+/* Movimento operacional: confirma a ação sem competir com a leitura. */
+@keyframes orderToolbarSearchIn {
+  from {
+    opacity: 0;
+    transform: translateX(6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes orderControlSelect {
+  0% { transform: scale(0.96); }
+  70% { transform: scale(1.018); }
+  100% { transform: scale(1); }
+}
+
+.dashboard-factory .dashboard-view .ops .order-search-control.is-open .search-box {
+  transform-origin: right center;
+  animation: orderToolbarSearchIn 0.16s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.dashboard-factory .dashboard-view .ops .order-dashboard-menu .data-button-list button,
+.fulfillment-filter button {
+  transition: color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+
+.dashboard-factory .dashboard-view .ops .order-dashboard-menu .data-button-list button.active,
+.fulfillment-filter button.active {
+  animation: orderControlSelect 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dashboard-factory .dashboard-view .ops .order-search-control.is-open .search-box,
+  .dashboard-factory .dashboard-view .ops .order-dashboard-menu .data-button-list button.active,
+  .fulfillment-filter button.active {
+    animation: none !important;
+  }
+}

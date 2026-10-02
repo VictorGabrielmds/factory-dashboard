@@ -1,0 +1,346 @@
+/* ═══════════════════════════════════════════════════════════════
+   util.css — SOURCE OF TRUTH (CORES E TIPOGRAFIA)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── MODO CLARO (PADRÃO) ─── */
+:root {
+  --md-font-family: "Inter Variable", sans-serif;
+
+  /* Cores Base e Superfícies */
+  --sys-color-background: #F3F4F9;
+  --sys-color-surface: #FFFFFF;
+  --sys-color-surface-variant: #F4F4F4;
+  --sys-color-hover-bg: #F2F3F8;
+  --sys-color-input-bg: #F8F9FC;
+
+  /* Textos */
+  --sys-color-text-main: #1C1D26;
+  --sys-color-text-muted: #5A5C6E;
+  --sys-color-text-faint: #9A9CB0;
+
+  /* Linhas e Bordas */
+  --sys-color-line: #E8E9F1;
+  --sys-color-line-strong: #C9CCE8;
+  --sys-color-line-hover: #DDDFF0;
+  --sys-color-perf: #D5D7E4;
+
+  /* Marca (Índigo) */
+  --sys-color-primary: #32378E;
+  --sys-color-primary-hover: #262A6E;
+  --sys-color-primary-soft: #F0F1FA;
+
+  /* Feedback: Sucesso (Verde) */
+  --sys-color-success: #06A77D;
+  --sys-color-success-soft: #EDF9F5;
+  --sys-color-success-ink: #1E7A5C;
+
+  /* Feedback: Atenção (Âmbar) */
+  --sys-color-warning: #B45309;
+  --sys-color-warning-dot: #F59E0B;
+  --sys-color-warning-soft: #FDF4E3;
+
+  /* Feedback: Erro/Alerta (Magenta) */
+  --sys-color-danger: #D81E5C;
+
+  /* Sombras Modo Claro */
+  --sys-shadow-sm: 0 1px 2px rgba(28, 29, 38, 0.04), 0 4px 14px rgba(28, 29, 38, 0.05);
+  --sys-shadow-md: 0 3px 6px rgba(28, 29, 38, 0.06), 0 14px 34px rgba(28, 29, 38, 0.12);
+  --sys-shadow-focus: 0 10px 26px rgba(50, 55, 142, 0.16);
+}
+
+/* ─── MODO ESCURO ─── */
+:root[data-theme="dark"] {
+  /* Cores Base e Superfícies */
+  --sys-color-background: #121214;
+  --sys-color-surface: #1E1E24;
+  --sys-color-surface-variant: #2A2A35;
+  --sys-color-hover-bg: #292933;
+  --sys-color-input-bg: #18181D;
+
+  /* Textos (Invertidos) */
+  --sys-color-text-main: #E1E1E6;
+  --sys-color-text-muted: #A9A9B2;
+  --sys-color-text-faint: #7C7C8A;
+
+  /* Linhas e Bordas */
+  --sys-color-line: #323238;
+  --sys-color-line-strong: #4D4D57;
+  --sys-color-line-hover: #3E3E47;
+  --sys-color-perf: #323238;
+
+  /* Marca (Índigo adaptado p/ contraste escuro) */
+  --sys-color-primary: #747BFF;
+  --sys-color-primary-hover: #5C62CC;
+  --sys-color-primary-soft: #24264D;
+
+  /* Feedback: Sucesso (Verde vibrante) */
+  --sys-color-success: #05C492;
+  --sys-color-success-soft: #143A2F;
+  --sys-color-success-ink: #6EE7C3;
+
+  /* Feedback: Atenção (Âmbar vibrante) */
+  --sys-color-warning: #FBBF24;
+  --sys-color-warning-dot: #FCD34D;
+  --sys-color-warning-soft: #422D19;
+
+  /* Feedback: Erro/Alerta (Magenta vibrante) */
+  --sys-color-danger: #FF4D85;
+
+  /* Sombras Modo Escuro (Mais intensas p/ destacar no fundo preto) */
+  --sys-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5), 0 4px 14px rgba(0, 0, 0, 0.6);
+  --sys-shadow-md: 0 3px 6px rgba(0, 0, 0, 0.6), 0 14px 34px rgba(0, 0, 0, 0.8);
+  --sys-shadow-focus: 0 10px 26px rgba(116, 123, 255, 0.16);
+}
+
+/* O RESTO DO SEU util.css CONTINUA AQUI (Tipografia, classes .md-display, etc) */
+
+/* Tokens globais (ajuste font-family se quiser) */
+:root{
+  --md-font-family: "Inter Variable", sans-serif;
+  
+  /* Display */
+  --md-display-large-size: 57px;
+  --md-display-large-line: 64px;
+  --md-display-large-weight: 400;
+  --md-display-large-letter: -0.25px;
+
+  --md-display-medium-size: 45px;
+  --md-display-medium-line: 52px;
+  --md-display-medium-weight: 400;
+  --md-display-medium-letter: 0px;
+
+  --md-display-small-size: 36px;
+  --md-display-small-line: 44px;
+  --md-display-small-weight: 400;
+  --md-display-small-letter: 0px;
+
+  /* Headline */
+  --md-headline-large-size: 32px;
+  --md-headline-large-line: 40px;
+  --md-headline-large-weight: 400;
+  --md-headline-large-letter: 0px;
+
+  --md-headline-medium-size: 28px;
+  --md-headline-medium-line: 36px;
+  --md-headline-medium-weight: 400;
+  --md-headline-medium-letter: 0px;
+
+  --md-headline-small-size: 24px;
+  --md-headline-small-line: 32px;
+  --md-headline-small-weight: 400;
+  --md-headline-small-letter: 0px;
+
+  /* Title */
+  --md-title-large-size: 22px;
+  --md-title-large-line: 28px;
+  --md-title-large-weight: 400;
+  --md-title-large-letter: 0px;
+
+  --md-title-medium-size: 16px;
+  --md-title-medium-line: 24px;
+  --md-title-medium-weight: 500;
+  --md-title-medium-letter: 0.15px;
+
+  --md-title-small-size: 14px;
+  --md-title-small-line: 20px;
+  --md-title-small-weight: 500;
+  --md-title-small-letter: 0.1px;
+
+  /* Body */
+  --md-body-large-size: 16px;
+  --md-body-large-line: 24px;
+  --md-body-large-weight: 400;
+  --md-body-large-letter: 0.5px;
+
+  --md-body-medium-size: 14px;
+  --md-body-medium-line: 20px;
+  --md-body-medium-weight: 400;
+  --md-body-medium-letter: 0.25px;
+
+  --md-body-small-size: 12px;
+  --md-body-small-line: 16px;
+  --md-body-small-weight: 400;
+  --md-body-small-letter: 0.4px;
+
+  /* Label (buttons/labels) */
+  --md-label-large-size: 14px;
+  --md-label-large-line: 20px;
+  --md-label-large-weight: 500;
+  --md-label-large-letter: 0.1px;
+
+  --md-label-medium-size: 12px;
+  --md-label-medium-line: 16px;
+  --md-label-medium-weight: 500;
+  --md-label-medium-letter: 0.5px;
+
+  --md-label-small-size: 11px;
+  --md-label-small-line: 16px;
+  --md-label-small-weight: 500;
+  --md-label-small-letter: 0.5px;
+}
+
+/* --------------------------
+   Utilitárias (classes)
+   Uso: aplique a classe no elemento . Ex: <h1 class="md-display-large">...</h1>
+   -------------------------- */
+
+/* Display */
+.md-display-large {
+  font-family: var(--md-font-family);
+  font-size: var(--md-display-large-size);
+  line-height: calc(var(--md-display-large-line) / var(--md-display-large-size));
+  font-weight: var(--md-display-large-weight);
+  letter-spacing: var(--md-display-large-letter);
+  margin: 0;
+}
+.md-display-medium {
+  font-family: var(--md-font-family);
+  font-size: var(--md-display-medium-size);
+  line-height: calc(var(--md-display-medium-line) / var(--md-display-medium-size));
+  font-weight: var(--md-display-medium-weight);
+  letter-spacing: var(--md-display-medium-letter);
+  margin: 0;
+}
+.md-display-small {
+  font-family: var(--md-font-family);
+  font-size: var(--md-display-small-size);
+  line-height: calc(var(--md-display-small-line) / var(--md-display-small-size));
+  font-weight: var(--md-display-small-weight);
+  letter-spacing: var(--md-display-small-letter);
+  margin: 0;
+}
+
+/* Headline */
+.md-headline-large {
+  font-family: var(--md-font-family);
+  font-size: var(--md-headline-large-size);
+  line-height: calc(var(--md-headline-large-line) / var(--md-headline-large-size));
+  font-weight: var(--md-headline-large-weight);
+  letter-spacing: var(--md-headline-large-letter);
+  margin: 0;
+}
+.md-headline-medium {
+  font-family: var(--md-font-family);
+  font-size: var(--md-headline-medium-size);
+  line-height: calc(var(--md-headline-medium-line) / var(--md-headline-medium-size));
+  font-weight: var(--md-headline-medium-weight);
+  letter-spacing: var(--md-headline-medium-letter);
+  margin: 0;
+}
+.md-headline-small {
+  font-family: var(--md-font-family);
+  font-size: var(--md-headline-small-size);
+  line-height: calc(var(--md-headline-small-line) / var(--md-headline-small-size));
+  font-weight: var(--md-headline-small-weight);
+  letter-spacing: var(--md-headline-small-letter);
+  margin: 0;
+}
+
+/* Title */
+.md-title-large {
+  font-family: var(--md-font-family);
+  font-size: var(--md-title-large-size);
+  line-height: calc(var(--md-title-large-line) / var(--md-title-large-size));
+  font-weight: var(--md-title-large-weight);
+  letter-spacing: var(--md-title-large-letter);
+  margin: 0;
+}
+.md-title-medium {
+  font-family: var(--md-font-family);
+  font-size: var(--md-title-medium-size);
+  line-height: calc(var(--md-title-medium-line) / var(--md-title-medium-size));
+  font-weight: var(--md-title-medium-weight);
+  letter-spacing: var(--md-title-medium-letter);
+  margin: 0;
+}
+.md-title-small {
+  font-family: var(--md-font-family);
+  font-size: var(--md-title-small-size);
+  line-height: calc(var(--md-title-small-line) / var(--md-title-small-size));
+  font-weight: var(--md-title-small-weight);
+  letter-spacing: var(--md-title-small-letter);
+  margin: 0;
+}
+
+/* Body */
+.md-body-large {
+  font-family: var(--md-font-family);
+  font-size: var(--md-body-large-size);
+  line-height: calc(var(--md-body-large-line) / var(--md-body-large-size));
+  font-weight: var(--md-body-large-weight);
+  letter-spacing: var(--md-body-large-letter);
+}
+.md-body-medium {
+  font-family: var(--md-font-family);
+  font-size: var(--md-body-medium-size);
+  line-height: calc(var(--md-body-medium-line) / var(--md-body-medium-size));
+  font-weight: var(--md-body-medium-weight);
+  letter-spacing: var(--md-body-medium-letter);
+}
+.md-body-small {
+  font-family: var(--md-font-family);
+  font-size: var(--md-body-small-size);
+  line-height: calc(var(--md-body-small-line) / var(--md-body-small-size));
+  font-weight: var(--md-body-small-weight);
+  letter-spacing: var(--md-body-small-letter);
+}
+
+/* Label */
+.md-label-large {
+  font-family: var(--md-font-family);
+  font-size: var(--md-label-large-size);
+  line-height: calc(var(--md-label-large-line) / var(--md-label-large-size));
+  font-weight: var(--md-label-large-weight);
+  letter-spacing: var(--md-label-large-letter);
+  text-transform: none; /* M3 recomenda botão capitalização dependendo do design */
+}
+.md-label-medium {
+  font-family: var(--md-font-family);
+  font-size: var(--md-label-medium-size);
+  line-height: calc(var(--md-label-medium-line) / var(--md-label-medium-size));
+  font-weight: var(--md-label-medium-weight);
+  letter-spacing: var(--md-label-medium-letter);
+}
+.md-label-small {
+  font-family: var(--md-font-family);
+  font-size: var(--md-label-small-size);
+  line-height: calc(var(--md-label-small-line) / var(--md-label-small-size));
+  font-weight: var(--md-label-small-weight);
+  letter-spacing: var(--md-label-small-letter);
+}
+
+/* Small helper: quick weight shortcuts */
+.md-regular { font-weight: 400 !important; }
+.md-medium  { font-weight: 500 !important; }
+
+
+
+
+.card.elev-0 {
+  box-shadow: none;
+  background: var(--md-sys-color-surface);
+}
+
+.card.elev-1 {
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.30),
+              0px 1px 3px 1px rgba(0,0,0,0.15);
+  background: 
+    linear-gradient(rgba(var(--md-sys-color-primary-rgb), 0.05), rgba(var(--md-sys-color-primary-rgb), 0.05)),
+    var(--md-sys-color-surface);
+}
+
+.card.elev-2 {
+  box-shadow: 0px 1px 2px rgba(0,0,0,0.30),
+              0px 2px 6px 2px rgba(0,0,0,0.15);
+  background: 
+    linear-gradient(rgba(var(--md-sys-color-primary-rgb), 0.08), rgba(var(--md-sys-color-primary-rgb), 0.08)),
+    var(--md-sys-color-surface);
+}
+
+.card.elev-3 {
+  box-shadow: 0px 1px 3px rgba(0,0,0,0.30),
+              0px 4px 8px 3px rgba(0,0,0,0.15);
+  background: 
+    linear-gradient(rgba(var(--md-sys-color-primary-rgb), 0.11), rgba(var(--md-sys-color-primary-rgb), 0.11)),
+    var(--md-sys-color-surface);
+}

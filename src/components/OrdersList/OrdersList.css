@@ -1,0 +1,907 @@
+/* ═══════════════════════════════════════════════════════════════
+   OrdersList — lista + modal de despacho, na linguagem da comanda
+   Mesmos tokens do OrderCard. O momento de assinatura é a etapa de
+   confirmação: despachar a viagem é "imprimir a comanda", então o
+   resumo é um mini-recibo — linhas numeradas tabulares atrás de uma
+   linha de picote.
+   ═══════════════════════════════════════════════════════════════ */
+
+.order-column,
+.delivery-modal {
+  --oc-ink:        var(--sys-color-text-main);
+  --oc-ink-soft:   var(--sys-color-text-muted);
+  --oc-ink-faint:  var(--sys-color-text-faint);
+  --oc-accent:     var(--sys-color-primary);
+  --oc-accent-ink: var(--sys-color-primary-hover);
+  --oc-accent-bg:  var(--sys-color-primary-soft);
+  --oc-line:       var(--sys-color-line);
+  --oc-perf:       var(--sys-color-perf);
+  --oc-paper:      var(--sys-color-surface);
+  --oc-ok:         var(--sys-color-success);
+  --oc-ok-ink:     var(--sys-color-success-ink);
+  --oc-warn:       var(--sys-color-warning);
+  --oc-warn-dot:   var(--sys-color-warning-dot);
+  --oc-warn-bg:    var(--sys-color-warning-soft);
+  --oc-alert:      var(--sys-color-danger);
+}
+
+/* ─── Coluna de pedidos ────────────────────────────────────── */
+
+.order-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  /* respiro para a barra de despacho fixa não cobrir o último card */
+  padding-bottom: 0.25rem;
+}
+
+.order-column.batch {
+  padding-bottom: 90px;
+}
+
+/* Cabeçalho da coluna: nome, propósito e volume no mesmo ponto de leitura. */
+.order-column {
+  gap: 10px;
+}
+
+.order-column-header {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  margin: -2px -2px 2px;
+  padding: 7px 8px 9px;
+  border-bottom: 1px solid var(--oc-line);
+  background: color-mix(in srgb, var(--sys-color-surface-subtle) 94%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.order-column-heading {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  gap: 9px;
+}
+
+.order-column-status {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--oc-accent);
+  box-shadow: 0 0 0 4px var(--oc-accent-bg);
+}
+
+.order-column-header--completed .order-column-status {
+  background: var(--oc-ok);
+  box-shadow: 0 0 0 4px var(--sys-color-success-soft);
+}
+
+.order-column-header--payment .order-column-status {
+  background: var(--sys-color-warning-dot, #f59e0b);
+  box-shadow: 0 0 0 4px var(--sys-color-warning-soft, #fff7ed);
+}
+
+.order-column-header--ready .order-column-status {
+  background: #0ea5a8;
+  box-shadow: 0 0 0 4px color-mix(in srgb, #0ea5a8 14%, transparent);
+}
+
+.order-column-header--scheduled .order-column-status {
+  background: var(--oc-warn-dot);
+  box-shadow: 0 0 0 4px var(--oc-warn-bg);
+}
+
+.order-column-heading h2 {
+  margin: 0;
+  color: var(--oc-ink);
+  font-size: 0.8rem;
+  font-weight: 750;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.order-column-heading p {
+  overflow: hidden;
+  margin: 2px 0 0;
+  color: var(--oc-ink-faint);
+  font-size: 0.67rem;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.order-column-count {
+  display: grid;
+  min-width: 28px;
+  height: 24px;
+  padding: 0 7px;
+  place-items: center;
+  border: 1px solid var(--oc-line);
+  border-radius: 7px;
+  background: var(--oc-paper);
+  color: var(--oc-ink-soft);
+  font-size: 0.72rem;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+
+.order-column-header-actions {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 6px;
+}
+
+.btn-start-trip {
+  min-height: 28px;
+  padding: 5px 9px;
+  border: 1px solid color-mix(in srgb, var(--oc-accent) 32%, var(--oc-line));
+  border-radius: 7px;
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent-ink);
+  font: inherit;
+  font-size: 0.68rem;
+  font-weight: 750;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+}
+
+.btn-start-trip:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--oc-accent) 52%, var(--oc-line));
+  background: color-mix(in srgb, var(--oc-accent-bg) 82%, var(--oc-accent) 18%);
+}
+
+.btn-start-trip:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+/* Modo de seleção: quem não está na viagem recua, sem sumir */
+.order-column.batch .order-card:not(.checked-block) {
+  opacity: 0.62;
+  filter: saturate(0.85);
+  transition: opacity 0.18s ease, filter 0.18s ease;
+}
+
+.order-column.batch .order-card:not(.checked-block):hover {
+  opacity: 1;
+  filter: none;
+}
+
+/* ─── Estado vazio ─────────────────────────────────────────── */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: var(--sys-color-surface-subtle, #FBFBFE);
+  border: 1.5px dashed var(--oc-perf); /* o picote também mora aqui */
+  border-radius: 16px;
+  padding: 3rem 1rem;
+  color: var(--oc-ink-faint);
+  font-weight: 500;
+  font-size: 0.88rem;
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+.order-column .empty-state {
+  min-height: 156px;
+  gap: 5px;
+  padding: 24px 18px;
+  border: 1px dashed var(--oc-line);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--oc-paper) 62%, transparent);
+  text-align: center;
+}
+
+.order-column .empty-state-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 3px;
+  place-items: center;
+  border: 1px solid var(--oc-line);
+  border-radius: 10px;
+  background: var(--oc-paper);
+  color: var(--oc-ink-faint);
+  font-size: 1.2rem;
+}
+
+.order-column .empty-state strong {
+  color: var(--oc-ink-soft);
+  font-size: 0.8rem;
+}
+
+.order-column .empty-state p {
+  max-width: 270px;
+  color: var(--oc-ink-faint);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.order-column .empty-state button {
+  margin-top: 7px;
+  padding: 6px 10px;
+  border: 1px solid var(--oc-line);
+  border-radius: 7px;
+  background: var(--oc-paper);
+  color: var(--oc-accent);
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.order-column .empty-state button:hover {
+  border-color: var(--sys-color-line-strong);
+  background: var(--oc-accent-bg);
+}
+
+/* ─── Barra de despacho (antes: FABs soltos) ───────────────── */
+
+.fab-bar {
+  position: fixed;
+  bottom: 1.6rem;
+  right: 1.6rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--oc-line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--oc-paper) 92%, transparent);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.18);
+  backdrop-filter: blur(12px);
+  z-index: 1000;
+  animation: slideUpFab 0.28s cubic-bezier(0.3, 0.9, 0.4, 1);
+}
+
+.trip-selection-summary {
+  display: flex;
+  min-width: 118px;
+  padding: 0 8px 0 5px;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.trip-selection-summary strong {
+  color: var(--oc-ink);
+  font-size: 0.74rem;
+  line-height: 1.2;
+}
+
+.trip-selection-summary span {
+  color: var(--oc-ink-faint);
+  font-size: 0.66rem;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+@keyframes slideUpFab {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fab-conclude,
+.fab-cancel {
+  font-family: 'Inter Variable', sans-serif;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  min-height: 36px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.18s ease, background 0.15s ease;
+  font-variant-numeric: tabular-nums;
+}
+
+.fab-conclude {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  background-color: var(--oc-ok);
+  color: #fff;
+  border: none;
+  box-shadow: none;
+}
+
+.fab-conclude:hover:not(:disabled) {
+  transform: none;
+  background-color: var(--oc-ok-ink);
+  box-shadow: none;
+}
+
+.fab-conclude:disabled {
+  cursor: not-allowed;
+  opacity: 0.44;
+}
+
+.fab-conclude kbd {
+  padding: 3px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.12);
+  color: inherit;
+  font: inherit;
+  font-size: 0.62rem;
+  font-weight: 750;
+  line-height: 1;
+}
+
+.fab-cancel {
+  background-color: var(--oc-paper);
+  color: var(--oc-ink-soft);
+  border: 1px solid var(--oc-line);
+  box-shadow: none;
+  opacity: 1;
+}
+
+.fab-cancel:hover {
+  transform: none;
+  color: var(--oc-ink);
+  background: var(--sys-color-hover-bg);
+}
+
+@media (max-width: 666px) {
+  .order-column-heading p {
+    white-space: normal;
+  }
+
+  .fab-bar {
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    justify-content: stretch;
+  }
+
+  .trip-selection-summary {
+    min-width: 0;
+    margin-right: auto;
+  }
+
+  .fab-conclude {
+    justify-content: center;
+  }
+}
+
+/* ─── Modal: layout geral ──────────────────────────────────── */
+
+.delivery-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 4px;
+  color: var(--oc-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ─── Modal: carimbos de data/hora ─────────────────────────── */
+
+.modal-datetime {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.modal-form .sub-info,
+.confirm-summary .sub-info {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--oc-ink-soft);
+  margin: 0;
+  background: var(--sys-color-hover-bg, #F2F3F8);
+  padding: 5px 11px;
+  border-radius: 8px;
+}
+
+.modal-form .sub-info svg,
+.confirm-summary .sub-info svg {
+  font-size: 0.95rem;
+  color: var(--oc-ink-faint);
+  flex-shrink: 0;
+}
+
+/* ─── Modal: rótulo de campo ───────────────────────────────── */
+
+.field-label {
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  color: var(--oc-ink-faint);
+  margin-bottom: -4px;
+}
+
+/* ─── Motoboy: autocomplete ────────────────────────────────── */
+
+.motoboy-autocomplete {
+  position: relative;
+}
+
+.motoboy-autocomplete input {
+  width: 100%;
+  padding: 10px 13px;
+  border-radius: 10px;
+  border: 1.5px solid var(--oc-line);
+  background-color: var(--sys-color-input-bg, #F7F8FB);
+  color: var(--oc-ink);
+  font-family: 'Inter Variable', sans-serif;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  transition: border-color 0.18s ease, background 0.18s ease, box-shadow 0.18s ease;
+}
+
+.motoboy-autocomplete input::placeholder {
+  color: var(--oc-ink-faint);
+}
+
+.motoboy-autocomplete input:focus {
+  outline: none;
+  border-color: var(--oc-accent);
+  background-color: var(--oc-paper);
+  box-shadow: 0 0 0 4px rgba(var(--sys-color-accent-rgb), 0.09);
+}
+
+.motoboy-suggestions {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  z-index: 50;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background-color: var(--oc-paper);
+  border-radius: 12px;
+  border: 1px solid var(--oc-line);
+  box-shadow: 0 4px 10px rgba(28, 29, 38, 0.06), 0 16px 36px rgba(28, 29, 38, 0.14);
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.motoboy-suggestions li {
+  padding: 9px 12px;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  color: var(--oc-ink);
+  cursor: pointer;
+  transition: background-color 0.12s;
+}
+
+.motoboy-suggestions li.highlighted,
+.motoboy-suggestions li:hover {
+  background-color: var(--oc-accent-bg);
+  color: var(--oc-accent);
+  font-weight: 600;
+}
+
+.motoboy-suggestion-empty {
+  cursor: default !important;
+  color: var(--oc-ink-faint) !important;
+  font-style: italic;
+}
+
+.motoboy-suggestion-empty:hover {
+  background-color: transparent !important;
+}
+
+/* ─── Maquininha: switch + número ──────────────────────────── */
+
+.switch-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--sys-color-input-bg, #F7F8FB);
+  border: 1px solid var(--oc-line);
+  padding: 9px 14px;
+  border-radius: 12px;
+}
+
+.switch-label {
+  flex: 1;
+  font-size: 0.84rem;
+  color: var(--oc-ink);
+  font-weight: 600;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 27px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--sys-color-line-strong, #DCDEE9);
+  transition: background 0.25s ease;
+  border-radius: 30px;
+}
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 21px;
+  width: 21px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--oc-paper, #fff);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(28, 29, 38, 0.25);
+}
+
+.switch input:checked + .slider {
+  background-color: var(--oc-accent);
+}
+
+.switch input:checked + .slider::before {
+  transform: translateX(19px);
+}
+
+.switch input:focus-visible + .slider {
+  outline: 2px solid var(--oc-accent);
+  outline-offset: 2px;
+}
+
+.machine-number {
+  width: 72px;
+  padding: 8px 10px;
+  border: 1.5px solid var(--oc-line);
+  background-color: var(--oc-paper);
+  color: var(--oc-ink);
+  border-radius: 9px;
+  font-family: 'Inter Variable', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  transition: border-color 0.18s, box-shadow 0.18s;
+}
+
+.machine-number:focus {
+  outline: none;
+  border-color: var(--oc-accent);
+  box-shadow: 0 0 0 4px rgba(var(--sys-color-accent-rgb), 0.09);
+}
+
+.machine-number::-webkit-outer-spin-button,
+.machine-number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+/* ─── Avisos (cartão / PIX) — mesma família visual ─────────── */
+
+.card-payment-hint,
+.pix-unpaid-hint {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 9px 13px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.45;
+  animation: fadeInHint 0.2s ease-out;
+}
+
+.card-payment-hint svg,
+.pix-unpaid-hint svg {
+  font-size: 1rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Lembrete gentil: informativo, tom baixo */
+.card-payment-hint {
+  background-color: var(--sys-color-input-bg, #F7F8FB);
+  border: 1px solid var(--oc-line);
+  color: var(--oc-ink-soft);
+}
+
+.card-payment-hint svg {
+  color: var(--oc-ink-faint);
+}
+
+/* PIX não confirmado: exige atenção — âmbar da casa */
+.pix-unpaid-hint {
+  background: var(--oc-warn-bg);
+  border: 1px solid var(--oc-warn-dot);
+  color: var(--oc-warn);
+}
+
+.pix-unpaid-hint svg {
+  color: var(--oc-warn-dot);
+}
+
+.pix-unpaid-hint strong {
+  font-weight: 800;
+}
+
+@keyframes fadeInHint {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Lista de pedidos da viagem (seleção) ─────────────────── */
+
+.order-trip-list {
+  background-color: var(--sys-color-surface-subtle, #FBFBFE);
+  border: 1px solid var(--oc-line);
+  padding: 10px 14px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.trip-list-title {
+  font-size: 0.64rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  color: var(--oc-ink-faint);
+  margin: 0 0 2px;
+}
+
+.trip-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.82rem;
+  color: var(--oc-ink);
+  gap: 8px;
+}
+
+.trip-list-item strong {
+  color: var(--oc-ink-soft);
+  font-weight: 700;
+}
+
+.btn-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  flex-shrink: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: 6px;
+  color: var(--oc-ink-faint);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-remove:hover {
+  background-color: var(--sys-color-danger-soft, #FCE8EF);
+  color: var(--oc-alert);
+}
+
+/* ─── Confirmação: o mini-recibo da viagem ─────────────────── */
+
+.confirm-summary .confirm-lead {
+  font-size: 0.9rem;
+  color: var(--oc-ink);
+  margin: 0 0 4px;
+  line-height: 1.5;
+}
+
+.confirm-summary .confirm-time {
+  margin: 0;
+  margin-right: 6px;
+}
+
+/* A lista confirmada é a comanda: picote em cima, linhas numeradas */
+.confirm-summary .order-trip-list {
+  counter-reset: trip;
+  border-top: 1.5px dashed var(--oc-perf);
+  border-radius: 0 0 12px 12px;
+  margin-top: 6px;
+  padding: 12px 14px;
+  list-style: none;
+}
+
+.confirm-summary .order-trip-list li {
+  counter-increment: trip;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--oc-ink);
+  margin: 0;
+}
+
+.confirm-summary .order-trip-list li::before {
+  content: counter(trip, decimal-leading-zero);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--oc-ink-faint);
+  flex-shrink: 0;
+  min-width: 18px;
+}
+
+.confirm-summary .order-trip-list li strong {
+  color: var(--oc-ink-soft);
+}
+
+/* ─── Salvando ─────────────────────────────────────────────── */
+
+.modal-saving {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 1.6rem 0;
+  color: var(--oc-ink-soft);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--oc-line);
+  border-top-color: var(--oc-accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Botões do rodapé ─────────────────────────────────────── */
+
+.modal-buttons {
+  display: flex;
+  margin-top: 14px;
+  justify-content: space-between;
+  gap: 8px;
+}
+/* ─── Acessibilidade & movimento ───────────────────────────── */
+
+.order-column button:focus-visible,
+.delivery-modal button:focus-visible,
+.fab-bar button:focus-visible {
+  outline: 2px solid var(--oc-accent);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fab-bar,
+  .card-payment-hint,
+  .pix-unpaid-hint {
+    animation: none;
+  }
+  .fab-conclude,
+  .fab-cancel,
+  .btn-primary,
+  .btn-secondary,
+  .order-column.batch .order-card:not(.checked-block) {
+    transition: none;
+  }
+}
+
+/* ─── Mobile ───────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .fab-bar {
+    left: 1rem;
+    right: 1rem;
+    bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .fab-conclude {
+    flex: 0 0 auto;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .trip-selection-summary {
+    padding-inline: 4px;
+  }
+
+  .trip-selection-summary span,
+  .fab-conclude kbd {
+    display: none;
+  }
+
+  .trip-selection-summary strong {
+    white-space: nowrap;
+  }
+}
+
+/* Colunas mais leves: o cabeçalho flutua sobre a tonalidade da própria coluna. */
+.order-column {
+  gap: 12px;
+}
+
+.order-column-header {
+  position: static;
+  min-height: 44px;
+  margin: 0;
+  padding: 5px 4px 9px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.order-column-header--completed {
+  background: transparent;
+}
+
+.order-column-header--scheduled {
+  background: transparent;
+}
+
+.order-column-status {
+  width: 7px;
+  height: 7px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--oc-accent-bg) 76%, transparent);
+}
+
+.order-column-heading h2 {
+  font-size: 0.78rem;
+}
+
+.order-column-heading p {
+  color: color-mix(in srgb, var(--oc-ink-faint) 86%, transparent);
+}
+
+.order-column-count {
+  min-width: 27px;
+  height: 24px;
+  border: 0;
+  background: var(--oc-accent-bg);
+  color: var(--oc-accent);
+}
+
+.order-column-header--completed .order-column-count {
+  background: var(--sys-color-success-soft);
+  color: var(--sys-color-success-ink);
+}
+
+.order-column-header--scheduled .order-column-count {
+  background: var(--oc-warn-bg);
+  color: var(--oc-warn);
+}
+
+.order-column .empty-state {
+  min-height: 150px;
+  border-color: transparent;
+  background: color-mix(in srgb, var(--oc-paper) 62%, transparent);
+}

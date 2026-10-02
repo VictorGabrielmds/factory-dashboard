@@ -1,0 +1,20 @@
+{
+  "short_name": "Salgados",
+  "name": "Fábrica de Salgados Dashboard",
+  "description": "Painel de pedidos, entregas e atendimento da Fábrica de Salgados",
+  "icons": [
+    {
+      "src": "/factory-dashboard/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "id": "/factory-dashboard/",
+  "start_url": "/factory-dashboard/",
+  "scope": "/factory-dashboard/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#32378e",
+  "background_color": "#0F1017"
+}
