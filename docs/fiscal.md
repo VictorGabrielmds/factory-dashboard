@@ -45,6 +45,17 @@ Os valores vêm do pedido, não do preço atual do cardápio. Pedido aceito não
 - O contrato envia apenas `codigo_produto[]` já revisado e omite NCM/EAN/figura tributária de fallback. Taxa de entrega/cartão, item sem divisão unitária exata e PIX não confirmado são bloqueios explícitos, não arredondamentos ou decisões tributárias automáticas.
 - A autorização sintética exige uma pré-venda persistida com `codigo_ef`. A validação de XML/DANFE devolve somente tamanho e hashes; armazenamento privado, reconciliação e consulta após timeout ainda não foram implementados.
 
+## Máquina de estados da emissão (02/10/2026, não ligada ao endpoint)
+
+`functions/src/fiscal/emissao.js` coordena pré-venda, autorização e consulta com um provedor injetado. Ainda não existe cliente HTTP real, e as ações de emissão continuam bloqueadas em `servico.js`.
+
+- Estados: `preparada` → `pre_venda_solicitada` → `pre_venda_criada` → `autorizacao_solicitada` → `autorizada`, mais `rejeitada`, `inconclusiva` e `ambiente_divergente`. Cada transição grava um evento numerado em `eventos/`.
+- A intenção e um identificador de execução com prazo são gravados antes de cada chamada externa. Clique duplo ou dois operadores recebem `EMISSAO_EM_ANDAMENTO`. Uma execução que expira sem concluir vira `inconclusiva`.
+- Uma pré-venda inconclusiva pode ser reenviada com o mesmo `codigo_parceiro`, porque a documentação da EF diz que isso só atualiza a pré-venda. Uma autorização inconclusiva nunca é reenviada: `reconciliar` consulta `GET /venda/{referencia}/xml` com intervalo crescente (30 s até 30 min). Não encontrar o XML mantém a pendência.
+- Ambiente: a EF troca homologação/produção no painel, para o CNPJ inteiro, com a mesma URL. `FISCAL_AMBIENTE` aceita só `homologacao` nesta fase. O `tpAmb` do XML precisa ser 2. Se vier 1 ou faltar, a operação vai para `ambiente_divergente` e `fiscal_sistema/emissao` trava novas emissões até conferência humana.
+- Somente hashes e tamanhos do XML/DANFE são persistidos; o armazenamento privado dos documentos ainda falta.
+- Testes: `functions/test/emissaoFiscal.test.js`, com EF simulada e um double de Firestore que repete transações em conflito.
+
 ## Validação local
 
 ```powershell

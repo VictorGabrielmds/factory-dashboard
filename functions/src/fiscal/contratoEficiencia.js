@@ -204,9 +204,37 @@ function interpretarRespostaAutorizacao(resposta) {
   };
 }
 
+// A consulta do XML pela referencia propria e a unica forma documentada de
+// recuperar uma autorizacao cuja resposta se perdeu. Ausencia de XML nao prova
+// que a nota nao existe; quem chama mantem o estado inconclusivo.
+function construirComandoConsultaXml(operacao) {
+  if (!operacao || operacao.cnpjEmitente !== CNPJ_EMITENTE ||
+      !/^FDAPP_[a-f0-9]{32}$/.test(operacao.referenciaExterna || "")) {
+    throw new ErroFiscal("OPERACAO_FISCAL_INVALIDA", "A operacao fiscal nao possui referencia valida para consulta.", 422);
+  }
+  return {
+    metodo: "GET",
+    caminho: `${CAMINHO_VENDAS}/${encodeURIComponent(operacao.referenciaExterna)}/xml?cadastro_nacional=${CNPJ_EMITENTE}`,
+  };
+}
+
+// O ambiente da EF e trocado no painel do provedor, para o CNPJ inteiro, e a
+// URL e a mesma nos dois ambientes. Por isso o XML devolvido e a unica prova
+// de que a nota saiu no ambiente esperado (tpAmb 1 = producao, 2 = homologacao).
+const TP_AMB = { producao: "1", homologacao: "2" };
+
+function ambienteDoXml(xml) {
+  const valores = [...String(xml || "").matchAll(/<tpAmb>\s*([^<\s]*)\s*<\/tpAmb>/g)].map((m) => m[1]);
+  if (!valores.length || valores.some((v) => v !== valores[0])) return null;
+  return Object.keys(TP_AMB).find((ambiente) => TP_AMB[ambiente] === valores[0]) || null;
+}
+
 module.exports = {
   CAMINHO_VENDAS,
   MODELO_NFCE,
+  TP_AMB,
+  ambienteDoXml,
+  construirComandoConsultaXml,
   moeda,
   construirComandoPreVenda,
   interpretarRespostaPreVenda,
